@@ -130,9 +130,33 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
   .divider { text-align: center; color: var(--text-dim); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 16px; letter-spacing: 0.5em; margin: 8px 0 20px; }
+
+  /* パスワード画面 */
+  .pw-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .pw-box { text-align: center; padding: 40px 32px; max-width: 360px; width: 100%; }
+  .pw-title { font-family: 'Yomogi', cursive; font-size: 24px; color: var(--accent1); margin-bottom: 8px; letter-spacing: 0.08em; }
+  .pw-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; letter-spacing: 0.1em; }
+  .pw-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; outline: none; text-align: center; transition: border-color 0.2s; }
+  .pw-input:focus { border-color: var(--border-hi); }
+  .pw-input::placeholder { color: var(--text-dim); }
+  .pw-btn { width: 100%; margin-top: 16px; padding: 12px; border: none; border-radius: 10px; background: var(--btn-bg); color: white; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; letter-spacing: 0.15em; cursor: pointer; transition: all 0.3s; }
+  .pw-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .pw-btn:active { transform: translateY(0); }
+  .pw-error { font-size: 12px; color: #d06070; margin-top: 12px; display: none; }
 </style>
 </head>
 <body>
+
+<!-- パスワード画面 -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="pw-title">✩ おいもちゃん文庫 ✩</div>
+    <div class="pw-sub">パスワードを入力してね</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">はいる</button>
+    <div class="pw-error" id="pwError">パスワードが違うよ〜</div>
+  </div>
+</div>
 
 <button class="settings-gear" onclick="openSettingsModal()" title="API設定">⚙</button>
 
@@ -387,6 +411,18 @@
 </div>
 
 <script>
+  // パスワードチェック
+  const SITE_PW = 'candyshark';
+  function checkPw() {
+    const input = document.getElementById('pwInput').value;
+    if (input === SITE_PW) {
+      document.getElementById('pwOverlay').style.display = 'none';
+    } else {
+      document.getElementById('pwError').style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  }
+
   let apiKey = '';
   let outputText = '';
   let selectedTone = '';
