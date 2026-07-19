@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>おいもちゃん文庫（裏）</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Yomogi&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080f;
+    --bg2: #101018;
+    --bg3: #1a1825;
+    --border: #2a2045;
+    --border-hi: #8040e0;
+    --accent1: #a060ff;
+    --accent2: #ff60c0;
+    --text: #e8e0f5;
+    --text-muted: #8878a8;
+    --text-dim: #5a4878;
+    --btn-bg: linear-gradient(135deg, #7020d0, #c040a0);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 50% 40% at 20% 10%, rgba(120,40,220,0.12), transparent), radial-gradient(ellipse 40% 40% at 80% 80%, rgba(200,40,160,0.08), transparent), radial-gradient(ellipse 30% 30% at 50% 50%, rgba(160,96,255,0.06), transparent); pointer-events: none; z-index: 0; }
+  .wrap { position: relative; z-index: 1; max-width: 740px; margin: 0 auto; padding: 48px 24px 120px; }
+  header { text-align: center; margin-bottom: 48px; animation: fadeDown 0.8s ease both; }
+  .header-label { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 11px; letter-spacing: 0.5em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+  header h1 { font-family: 'Yomogi', cursive; font-size: 24px; font-weight: 400; letter-spacing: 0.08em; color: var(--accent1); margin-bottom: 8px; -webkit-text-stroke: 0.6px currentColor; }
+  header h1 span { color: var(--accent1); }
+  .header-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 0.3em; }
+  .api-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; animation: fadeUp 0.6s 0.2s ease both; }
+  .api-section label { display: block; font-size: 11px; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 10px; }
+  .api-row { display: flex; gap: 10px; }
+  .api-status { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .api-status button { background: none; border: none; color: var(--accent1); cursor: pointer; font-size: 12px; font-family: inherit; }
+  .api-status button:hover { color: var(--accent2); }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 28px; animation: fadeUp 0.6s 0.3s ease both; }
+  .tab { padding: 10px 20px; font-size: 13px; font-family: 'M PLUS Rounded 1c', sans-serif; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin-bottom: -1px; letter-spacing: 0.05em; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent1); }
+  .panel { display: none; animation: fadeUp 0.4s ease both; }
+  .panel.active { display: block; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .card-title { font-size: 11px; letter-spacing: 0.35em; margin-bottom: 16px; font-family: 'M PLUS Rounded 1c', sans-serif; }
+  .card-title.seme { color: #ff70b0; }
+  .card-title.uke { color: #90a0ff; }
+  .card-title.scene { color: var(--accent1); }
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.1em; }
+  input[type="text"], input[type="password"], textarea, select { width: 100%; background: rgba(10, 8, 20, 0.8); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s; resize: both; }
+  input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus { border-color: var(--border-hi); }
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 12px; font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+  .chip:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip.selected { background: rgba(155, 107, 192, 0.15); border-color: var(--accent1); color: var(--text); }
+  .chips-col { display: flex; flex-direction: column; gap: 8px; }
+  .chip-col { padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 13px; font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; transition: all 0.2s; text-align: left; }
+  .chip-col:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip-col.selected { background: rgba(155, 107, 192, 0.15); border-color: var(--accent1); color: var(--text); }
+  .btn-area { display: flex; gap: 12px; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 14px 24px; background: rgba(8,8,15,0.95); border-top: 2px solid var(--border); max-width: 740px; margin: 0 auto; }
+  .btn-generate { flex: 1; padding: 16px; border: none; border-radius: 12px; background: var(--btn-bg); color: white; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 18px; letter-spacing: 0.3em; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+  .btn-generate:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-continue { padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px; background: none; color: var(--accent1); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .btn-continue:hover { background: rgba(155, 107, 192, 0.15); border-color: var(--border-hi); }
+  .btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
+  .error-box { margin-top: 16px; padding: 12px 16px; background: rgba(180, 30, 60, 0.15); border: 1px solid rgba(200, 50, 80, 0.4); border-radius: 10px; font-size: 13px; color: #ff9090; display: none; }
+  .output-section { margin-top: 48px; display: none; animation: fadeUp 0.5s ease both; }
+  .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .output-label { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; letter-spacing: 0.3em; color: var(--accent1); }
+  .char-count { font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); margin-left: 8px; }
+  .output-actions { display: flex; gap: 12px; }
+  .output-actions button { background: none; border: none; font-size: 12px; cursor: pointer; font-family: 'M PLUS Rounded 1c', sans-serif; transition: color 0.2s; letter-spacing: 0.05em; }
+  .btn-copy { color: var(--accent1); }
+  .btn-copy:hover { color: var(--accent2); }
+  .btn-clear { color: var(--text-dim); }
+  .btn-clear:hover { color: var(--text-muted); }
+  .output-body { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 32px 36px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; line-height: 2.2; color: #e8e0f5; white-space: pre-wrap; word-break: break-all; }
+  .settings-gear { position: fixed; top: 16px; left: 16px; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--border); color: var(--text-muted); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .settings-gear:hover { background: var(--bg3); color: var(--text); border-color: var(--border-hi); transform: rotate(30deg); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .modal-close:hover { background: var(--bg3); color: var(--text); }
+  .modal-title { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 18px; letter-spacing: 0.2em; color: var(--text); margin-bottom: 20px; padding-right: 30px; }
+  .settings-area { transition: all 0.3s; overflow: hidden; }
+  .settings-area.collapsed { max-height: 0; opacity: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+  .toggle-settings-btn { width: 100%; padding: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .toggle-settings-btn:hover { border-color: var(--border-hi); color: var(--text); }
+  .arrow-icon { transition: transform 0.3s; display: inline-block; }
+  .toggle-settings-btn.collapsed .arrow-icon { transform: rotate(-90deg); }
+  .rating-toggle-area { display: flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg2); }
+  .rating-option { flex: 1; padding: 12px; background: none; border: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; }
+  .rating-option.active { background: linear-gradient(135deg, rgba(112,32,208,0.5), rgba(192,64,160,0.5)); color: var(--text); }
+  .rating-option:hover:not(.active) { background: rgba(160,96,255,0.1); color: var(--text); }
+  .model-select-area { margin-bottom: 12px; }
+  .model-select-area label { display: block; font-size: 11px; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 8px; }
+  .model-select-area select { width: 100%; background: rgba(10, 8, 20, 0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239b6bc0' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  .birth-section { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .birth-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; transition: background 0.2s; }
+  .birth-toggle-row:hover { background: rgba(160,96,255,0.1); }
+  .birth-toggle-label { font-size: 12px; letter-spacing: 0.2em; color: var(--text-muted); }
+  .toggle-switch { width: 40px; height: 22px; background: var(--border); border-radius: 999px; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .toggle-switch.on { background: var(--accent1); }
+  .toggle-switch::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: left 0.2s; }
+  .toggle-switch.on::after { left: 21px; }
+  .birth-content { padding: 0 16px 16px; display: none; }
+  .birth-content.visible { display: block; }
+  .birth-file-label { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; display: block; letter-spacing: 0.1em; }
+  .birth-file-row { display: flex; gap: 8px; align-items: center; }
+  .btn-file-select { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .btn-file-select:hover { border-color: var(--border-hi); color: var(--text); }
+  .birth-filename { font-size: 11px; color: var(--text-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .birth-preview { margin-top: 10px; padding: 10px 12px; background: rgba(20,10,35,0.6); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; color: var(--text-muted); max-height: 80px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; display: none; }
+  #birthFileInput { display: none; }
+  .save-load-area { display: flex; gap: 8px; margin-bottom: 12px; }
+  .btn-save-load { flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 10px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; text-align: center; }
+  .btn-save-load:hover { border-color: var(--border-hi); color: var(--text); background: rgba(160,96,255,0.1); }
+  #loadFileInput { display: none; }
+  .btn-reset { width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 10px; background: none; color: var(--text-dim); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; margin-bottom: 24px; }
+  .btn-reset:hover { border-color: #c06060; color: #e08080; background: rgba(150,40,40,0.1); }
+  .loading-dots span { animation: blink 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+  .divider { text-align: center; color: var(--text-dim); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 16px; letter-spacing: 0.5em; margin: 8px 0 20px; }
+
+  /* パスワード画面 */
+  .pw-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .pw-box { text-align: center; padding: 40px 32px; max-width: 360px; width: 100%; }
+  .pw-title { font-family: 'Yomogi', cursive; font-size: 24px; color: var(--accent1); margin-bottom: 8px; letter-spacing: 0.08em; }
+  .pw-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; letter-spacing: 0.1em; }
+  .pw-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; outline: none; text-align: center; transition: border-color 0.2s; }
+  .pw-input:focus { border-color: var(--border-hi); }
+  .pw-input::placeholder { color: var(--text-dim); }
+  .pw-btn { width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 999px; background: linear-gradient(135deg, #7020d0, #c040a0); color: white; font-family: 'Yomogi', cursive; font-size: 15px; letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; -webkit-text-stroke: 0.4px currentColor; box-shadow: 0 0 20px rgba(160,96,255,0.3); }
+  .pw-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .pw-btn:active { transform: translateY(0); }
+  .pw-error { font-size: 12px; color: #d06070; margin-top: 12px; display: none; }
+
+  /* ボタン共通：フォントをYomogiに */
+  .chip, .chip-col, .btn-generate, .btn-continue, .btn-save-load, .btn-reset,
+  .btn-add-char, .rating-option, .toggle-settings-btn, .tab, .pw-btn {
+    font-family: 'Yomogi', cursive;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+  /* ボタン共通：ボーダーを太く */
+  .chip, .chip-col, .btn-continue, .btn-save-load, .toggle-settings-btn, .btn-file-select {
+    border-width: 2px;
+  }
+  .btn-reset, .btn-add-char {
+    border-width: 2px;
+  }
+  .rating-toggle-area {
+    border-width: 2px;
+  }
+
+  /* ふわふわ浮遊パーティクル */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute;
+    font-size: 12px;
+    opacity: 0;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-10vh) rotate(360deg); }
+  }
+
+  /* おいもSVGイラスト */
+  .oimo-illust { margin-bottom: 20px; }
+  .oimo-illust svg { filter: drop-shadow(0 2px 8px rgba(155,107,192,0.2)); }
+
+  /* ヘッダーキラキラ */
+  .sparkle-wrap { position: relative; display: inline-block; }
+  .sparkle {
+    position: absolute;
+    font-size: 10px;
+    opacity: 0.6;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  .sparkle:nth-child(1) { top: -8px; left: -20px; animation-delay: 0s; }
+  .sparkle:nth-child(2) { top: -5px; right: -20px; animation-delay: 0.7s; }
+  .sparkle:nth-child(3) { bottom: -5px; left: 10px; animation-delay: 1.4s; }
+  .sparkle:nth-child(4) { bottom: -8px; right: 10px; animation-delay: 0.3s; }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+  }
+
+  /* キャラクター追加 */
+  .add-char-area { display: flex; gap: 8px; margin-bottom: 16px; }
+
+  /* AIおまかせボタン */
+  .btn-ai-suggest {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    background: none;
+    color: var(--accent1);
+    font-family: 'Yomogi', cursive;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.1em;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+  .btn-ai-suggest:hover {
+    border-color: var(--border-hi);
+    background: rgba(160,96,255,0.08);
+  }
+  .btn-ai-suggest:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-add-char { flex: 1; padding: 10px; border: 1px dashed var(--border); border-radius: 10px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+  .btn-add-char:hover { border-color: var(--border-hi); color: var(--text); background: rgba(160,96,255,0.08); }
+  .extra-card { position: relative; }
+  .btn-remove-char { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: none; border: 1px solid var(--border); color: var(--text-dim); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .btn-remove-char:hover { background: rgba(200,80,80,0.1); border-color: #d06070; color: #d06070; }
+</style>
+</head>
+<body>
+
+<!-- 浮遊パーティクル -->
+<div class="particles" id="particles"></div>
+
+<!-- パスワード画面 -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="oimo-illust">
+      <svg width="90" height="120" viewBox="0 0 90 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- グラス -->
+        <path d="M25 35 L30 100 Q30 108 45 108 Q60 108 60 100 L65 35Z" fill="rgba(200,170,230,0.3)" stroke="#c0a0d8" stroke-width="1.5" />
+        <!-- ソーダ液体 -->
+        <path d="M27 42 L31 98 Q31 105 45 105 Q59 105 59 98 L63 42Z" fill="url(#sodaGrad)" />
+        <!-- 泡 -->
+        <circle cx="35" cy="85" r="2.5" fill="rgba(255,255,255,0.4)">
+          <animate attributeName="cy" values="85;50;40" dur="3s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.5;0.3;0" dur="3s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="50" cy="90" r="2" fill="rgba(255,255,255,0.3)">
+          <animate attributeName="cy" values="90;60;45" dur="3.5s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.4;0.3;0" dur="3.5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="42" cy="80" r="1.5" fill="rgba(255,255,255,0.4)">
+          <animate attributeName="cy" values="80;55;42" dur="4s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.5;0.2;0" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="55" cy="75" r="2" fill="rgba(255,255,255,0.3)">
+          <animate attributeName="cy" values="75;48;38" dur="2.8s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.4;0.2;0" dur="2.8s" repeatCount="indefinite" />
+        </circle>
+        <!-- アイス（バニラ） -->
+        <ellipse cx="45" cy="35" rx="18" ry="14" fill="#f8f0ff" />
+        <ellipse cx="45" cy="35" rx="18" ry="14" fill="url(#iceGrad)" />
+        <!-- アイスのハイライト -->
+        <ellipse cx="39" cy="30" rx="5" ry="3" fill="rgba(255,255,255,0.5)" transform="rotate(-15 39 30)" />
+        <!-- ストロー -->
+        <rect x="54" y="5" width="4" height="70" rx="2" fill="#e890b8" transform="rotate(8 56 40)" />
+        <rect x="54" y="5" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 9)" />
+        <rect x="54" y="17" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 21)" />
+        <rect x="54" y="29" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 33)" />
+        <!-- さくらんぼ -->
+        <circle cx="38" cy="22" r="5" fill="#d870a0" />
+        <circle cx="39.5" cy="20" r="1.5" fill="rgba(255,255,255,0.4)" />
+        <path d="M38 17 Q42 8 48 10" stroke="#80b080" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        <!-- 葉っぱ -->
+        <ellipse cx="47" cy="11" rx="4" ry="2.5" fill="#a0d8a0" transform="rotate(-10 47 11)" />
+        <!-- キラキラ -->
+        <polygon points="12,20 13.5,24 18,24 14.5,27 16,31 12,28.5 8,31 9.5,27 6,24 10.5,24" fill="#d8b0e8" opacity="0.6">
+          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" />
+        </polygon>
+        <polygon points="78,45 79,48 82,48 79.5,50 80.5,53 78,51 75.5,53 76.5,50 74,48 77,48" fill="#c8a0e0" opacity="0.5">
+          <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite" />
+        </polygon>
+        <circle cx="18" cy="60" r="1.5" fill="#d0a8e0" opacity="0.5">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="1.8s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="75" cy="80" r="1.5" fill="#c8a0e0" opacity="0.5">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.2s" repeatCount="indefinite" />
+        </circle>
+        <defs>
+          <linearGradient id="sodaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c8a0e8" />
+            <stop offset="50%" stop-color="#b080d8" />
+            <stop offset="100%" stop-color="#9868c8" />
+          </linearGradient>
+          <radialGradient id="iceGrad" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#fff8ff" />
+            <stop offset="100%" stop-color="#e8d8f0" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="pw-title">✩ おいもちゃん文庫（裏）✩</div>
+    <div class="pw-sub">パスワードを入力してね</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">はいる</button>
+    <div class="pw-error" id="pwError">パスワードが違うよ〜</div>
+  </div>
+</div>
+
+<button class="settings-gear" onclick="openSettingsModal()" title="API設定">⚙</button>
+
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettingsModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeSettingsModal()">×</button>
+    <div class="modal-title">⚙ API 設定</div>
+    <div class="api-section" id="apiSection">
+      <label>OpenRouter APIキー</label>
+      <div class="api-row">
+        <input type="password" id="apiKeyInput" placeholder="sk-or-..." style="flex:1">
+        <button class="chip" style="border-radius:8px;padding:10px 20px;" onclick="saveApiKey()">保存</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:8px;">キーはこのページ内にのみ保持されます（外部送信なし）</div>
+    </div>
+    <div class="api-status" id="apiStatus" style="display:none;">
+      <span style="color:#90d090;">✓ APIキー設定済み</span>
+      <button onclick="resetApiKey()">変更</button>
+    </div>
+    <div class="model-select-area" style="margin-top:16px;">
+      <label>使用モデル</label>
+      <select id="modelSelect">
+        <option value="deepseek/deepseek-v4-pro">DeepSeek V4 Pro（高品質・セール中）</option>
+        <option value="deepseek/deepseek-v4-flash">DeepSeek V4 Flash（高速・激安）</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-label">BL Novel Generator</div>
+    <h1><span class="sparkle-wrap"><span class="sparkle">✦</span><span class="sparkle">✧</span><span class="sparkle">✦</span><span class="sparkle">✧</span>✩ おいもちゃん文庫（裏）✩</span></h1>
+  </header>
+
+  <div class="rating-toggle-area">
+    <button class="rating-option active" onclick="setRating('r18', this)">🌹 R18モード</button>
+    <button class="rating-option" onclick="setRating('all', this)">🌸 全年齢モード</button>
+  </div>
+
+  <button class="toggle-settings-btn" id="toggleSettingsBtn" onclick="toggleSettings()">
+    <span class="arrow-icon">▼</span>
+    <span id="toggleSettingsLabel">設定を隠す</span>
+  </button>
+
+  <div class="settings-area" id="settingsArea">
+
+  <div class="save-load-area">
+    <button class="btn-save-load" onclick="saveSettings()">💾 設定を保存</button>
+    <button class="btn-save-load" onclick="document.getElementById('loadFileInput').click()">📂 設定を読み込む</button>
+    <input type="file" id="loadFileInput" accept=".json" onchange="loadSettings(event)">
+  </div>
+
+  <button class="btn-reset" onclick="resetAll()">❌ 全ての入力をリセット</button>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('chara', this)">キャラクター</button>
+    <button class="tab" onclick="switchTab('scene', this)">シーン設定</button>
+    <button class="tab" onclick="switchTab('style', this)">スタイル</button>
+  </div>
+
+  <div class="panel active" id="panel-chara">
+    <div class="card">
+      <div class="card-title seme">◆ 攻め</div>
+      <div class="field">
+        <label>性別</label>
+        <div class="chips" id="semeGenderChips">
+          <button class="chip selected" onclick="selectGender(this, 'seme', '男性')">♂ 男性</button>
+          <button class="chip" onclick="selectGender(this, 'seme', '女性')">♀ 女性</button>
+          <button class="chip" onclick="selectGender(this, 'seme', 'その他・指定なし')">― その他</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>名前</label>
+        <input type="text" id="semeName" placeholder="例：城戸朔也">
+      </div>
+      <div class="field">
+        <label>性格・人物像</label>
+        <textarea id="semePersonality" rows="3" placeholder="例：クールで寡黙。普段は感情を表に出さないが、好きな相手には独占欲が強い。エリート外科医。"></textarea>
+      </div>
+      <div class="field">
+        <label>外見・身体的特徴</label>
+        <textarea id="semeAppearance" rows="2" placeholder="例：長身で広い肩幅。短い金髪。鋭い青灰色の目。古傷が体のあちこちにある。大きな手。"></textarea>
+      </div>
+      <div class="field">
+        <label>補足・口調など</label>
+        <textarea id="semeExtra" rows="2" placeholder="例：敬語を使わない。低くて静かな声で話す。"></textarea>
+      </div>
+      <div class="field">
+        <label>会話例（任意）</label>
+        <textarea id="semeDialogue" rows="3" placeholder="例：&#10;「……別に、お前のためじゃねえよ」&#10;「うるさい。黙って食え」&#10;「……寝れねえなら、こっち来い」"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title uke">◇ 受け</div>
+      <div class="field">
+        <label>性別</label>
+        <div class="chips" id="ukeGenderChips">
+          <button class="chip selected" onclick="selectGender(this, 'uke', '男性')">♂ 男性</button>
+          <button class="chip" onclick="selectGender(this, 'uke', '女性')">♀ 女性</button>
+          <button class="chip" onclick="selectGender(this, 'uke', 'その他・指定なし')">― その他</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>名前</label>
+        <input type="text" id="ukeName" placeholder="例：桜井蓮">
+      </div>
+      <div class="field">
+        <label>性格・人物像</label>
+        <textarea id="ukePersonality" rows="3" placeholder="例：明るくて素直。感情が顔に出やすい。強がりなところもある。"></textarea>
+      </div>
+      <div class="field">
+        <label>外見・身体的特徴</label>
+        <textarea id="ukeAppearance" rows="2" placeholder="例：小柄で華奢。黒髪。色白で赤くなりやすい肌。細い首。"></textarea>
+      </div>
+      <div class="field">
+        <label>補足・口調など</label>
+        <textarea id="ukeExtra" rows="2" placeholder="例：「〜です」調。焦ると言葉が崩れる。"></textarea>
+      </div>
+      <div class="field">
+        <label>会話例（任意）</label>
+        <textarea id="ukeDialogue" rows="3" placeholder="例：&#10;「え、あ、ありがとうございます……」&#10;「べ、別にそういうんじゃないですけど！」&#10;「……もう少しだけ、こうしてていいですか」"></textarea>
+      </div>
+    </div>
+
+    <!-- 追加キャラクター -->
+    <div id="extraCharsContainer"></div>
+    <div class="add-char-area">
+      <button class="btn-add-char" onclick="addExtraChar('攻め')">＋ 攻めを追加</button>
+      <button class="btn-add-char" onclick="addExtraChar('受け')">＋ 受けを追加</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title scene">— 関係性</div>
+      <div class="field">
+        <textarea id="relationship" rows="3" placeholder="例：職場の上司と部下。付き合い始めて3ヶ月。受けはまだ攻めの本心がわからず不安を抱えている。"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-scene">
+    <div class="card">
+      <div class="card-title scene">— シチュエーション</div>
+      <div class="field">
+        <textarea id="situation" rows="4" placeholder="例：喧嘩した翌朝、攻めがアパートに押しかけてくる。受けはまだ怒っているが、攻めに押し倒される。"></textarea>
+      </div>
+      <button class="btn-ai-suggest" id="btnSuggest" onclick="suggestSituation()">🎲 AIにおまかせ</button>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— テーマ・描きたい感情</div>
+      <div class="field">
+        <textarea id="theme" rows="3" placeholder="例：攻めの不器用な「謝り方」。受けが怒りと愛情の間で揺れる葛藤。"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title seme">◆ 行為中の攻めの心境</div>
+      <div class="field">
+        <textarea id="semeMind" rows="2" placeholder="例：失いたくない。言葉より体で伝えようとしている。"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title uke">◇ 行為中の受けの心境</div>
+      <div class="field">
+        <textarea id="ukeMind" rows="2" placeholder="例：まだ怒っているのに、好きだという気持ちが勝ってしまう。泣きたくなる。"></textarea>
+      </div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="birth-toggle-row" onclick="toggleBirth()" style="padding:16px 20px;">
+        <span class="card-title scene" style="margin:0;">⚤ バース設定</span>
+        <div class="toggle-switch" id="birthToggle"></div>
+      </div>
+      <div class="birth-content" id="birthContent" style="padding:0 20px 20px;">
+        <div class="field">
+          <label>攻めのバース性</label>
+          <input type="text" id="semeBirth" placeholder="例：α（アルファ）／ Dom ／ S など">
+        </div>
+        <div class="field">
+          <label>受けのバース性</label>
+          <input type="text" id="ukeBirth" placeholder="例：Ω（オメガ）／ Sub ／ M など">
+        </div>
+        <div class="field">
+          <span class="birth-file-label" style="margin-bottom:8px;">バース設定ファイル（.txt）を読み込む</span>
+          <div class="birth-file-row">
+            <button class="btn-file-select" onclick="document.getElementById('birthFileInput').click()">📄 ファイルを選択</button>
+            <span class="birth-filename" id="birthFilename">未選択</span>
+            <input type="file" id="birthFileInput" accept=".txt" onchange="loadBirthFile(event)">
+          </div>
+          <div class="birth-preview" id="birthPreview"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 直前のパート文（任意）</div>
+      <div class="field" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">ここに入力した文章の直後から続きを書きます。既存の小説の濡れ場だけ生成したい場合などに使用してください。</div>
+      <div class="field">
+        <textarea id="precedingText" rows="5" placeholder="例：彼が部屋の扉を閉めた瞬間、空気が変わった気がした。&#10;「……逃げないのか」&#10;低い声が、耳のすぐそばで聞こえた。"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— その他の指示・こだわり</div>
+      <div class="field">
+        <textarea id="additionalNotes" rows="2" placeholder="例：最後は攻めに言葉で謝らせたい。雨の音を背景に使ってほしい。"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-style">
+    <div class="card">
+      <div class="card-title scene">— 雰囲気・トーン</div>
+      <div class="chips" id="toneChips">
+        <button class="chip" onclick="toggleChip(this, 'tone')">甘め・溺愛系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">切なめ・すれ違い</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">執着・独占欲強め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">ツンデレ攻め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">紳士攻め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">強引・壁ドン系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">ダーク・病み系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">エロ重視・濃厚</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">過激・ハード</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 視点</div>
+      <div class="chips" id="povChips">
+        <button class="chip selected" onclick="selectChip(this, 'pov')">受け一人称</button>
+        <button class="chip" onclick="selectChip(this, 'pov')">受け視点・三人称</button>
+        <button class="chip" onclick="selectChip(this, 'pov')">攻め一人称</button>
+        <button class="chip" onclick="selectChip(this, 'pov')">攻め視点・三人称</button>
+        <button class="chip" onclick="selectChip(this, 'pov')">神視点</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 文章量</div>
+      <div class="chips-col">
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">短め（800〜1200字）</button>
+        <button class="chip-col selected" onclick="selectChipCol(this, 'length')">普通（1500〜2500字）</button>
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">長め（3000〜4000字）</button>
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">がっつり（5000〜7000字）</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 文体NG・表記ルール</div>
+      <div class="field" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">禁止したい表記・文体のクセを入力してください。</div>
+      <div class="field">
+        <textarea id="styleNG" rows="4" placeholder="例：&#10;・「」内のセリフの最後に句点（。）をつけない&#10;・「〜のだった」「〜であった」などの文語調を使わない&#10;・「彼女は〜と思った」など思考の直接説明を多用しない"></textarea>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="btn-area">
+    <button class="btn-generate" id="btnGenerate" onclick="generate(false)">✦ 生成する</button>
+    <button class="btn-continue" id="btnContinue" onclick="generate(true)" style="display:none;" disabled>続きを書く</button>
+  </div>
+
+  <div class="output-section" id="outputSection">
+    <div class="output-header">
+      <div class="output-label">✦ 生成結果 <span class="char-count" id="charCount"></span></div>
+      <div class="output-actions">
+        <button class="btn-clear" onclick="clearOutput()">クリア</button>
+        <button class="btn-copy" onclick="copyOutput()">コピー</button>
+      </div>
+    </div>
+    <div class="output-body" id="outputBody"></div>
+  </div>
+
+</div>
+
+<script>
+  // パスワードチェック
+  const SITE_PW = 'candyshark';
+  function checkPw() {
+    const input = document.getElementById('pwInput').value;
+    if (input === SITE_PW) {
+      document.getElementById('pwOverlay').style.display = 'none';
+    } else {
+      document.getElementById('pwError').style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  }
+
+  let apiKey = '';
+  let outputText = '';
+  let selectedTone = '';
+  let selectedPov = '受け一人称';
+  let selectedLength = '普通（1500〜2500字）';
+  let semeGender = '男性';
+  let ukeGender = '男性';
+  let birthEnabled = false;
+  let birthText = '';
+  let currentRating = 'r18';
+  let extraCharCounter = 0;
+
+  const SYSTEM_PROMPT_ALLAGE = `あなたはBL（ボーイズラブ）小説の執筆専門AIです。
+pixivやAO3に投稿されるような同人小説・二次創作小説のスタイルを参考に、以下の方針で執筆してください。
+
+【文体・スタイル】
+- 指定された視点（一人称・三人称）を最初から最後まで絶対に変えない。視点キャラクター以外の内面は描写しない
+- 感情・心理描写を丁寧に、細やかに描く
+- 男性同士の関係性、距離感の変化、感情の揺れを丁寧に描く
+- セリフは自然で、キャラクターの個性が滲み出るように
+- 文章は読み心地のよいリズムを保つ
+- 性描写は一切行わない。キス程度までとし、心の触れ合いや関係性の変化に焦点を当てる
+
+【地の文の品質】
+- 五感を丁寧に描写する。肌の温度、触れた時の感触、相手の匂い、声の質感、空気感など
+- 「可愛い」「好き」などの感想で済ませず、なぜそう感じたのかを具体的に書く
+- 視点キャラクターの心情（愛おしさ、戸惑い、嫉妬、安心感など）を丁寧に描く
+- 相手の表情・仕草・体の反応を細かく観察する描写を入れる
+- 場面の空気感（天気、光、音、季節感）を要所で描く
+- 場面の「間」や沈黙の意味も描写する
+
+【日本語表現の厳守事項】
+- オノマトペ・擬音語・擬態語は一切使用しない。代わりに動詞・形容詞・名詞で具体的に描写する
+- 造語・存在しない日本語表現を作らない。必ず実在する自然な日本語を使う
+- 助詞・語順・文法を正確に守る
+- 文章途中で突然文語調や硬い表現に変わらない。文体を統一する
+- 不自然な直訳調の表現を使わない
+- 攻め・受けそれぞれの口調設定を厳守する。セリフの一つひとつがそのキャラクターの個性を反映していること
+- キャラクターのセリフは「いかにもそのキャラが言いそうな言葉」でなければならない
+- 地の文・セリフともに、実際の日本語小説として違和感のない自然な表現を使う
+- 同じ単語・フレーズを同一段落内で繰り返さない
+
+【禁止事項】
+- 視点の混在
+- キャラクター設定に反する言動
+- 性的描写・露骨な身体描写
+- ユーザーが指定していない要素の無断追加
+- 存在しない日本語・造語の使用
+
+ユーザーからキャラクター設定とシチュエーションが渡されます。設定を厳守し、指定された視点・心境・テーマを丁寧に、正確な日本語で描写してください。日常、感情、関係性の機微を中心に書いてください。`;
+
+  const SYSTEM_PROMPT_R18 = `あなたはBL（ボーイズラブ）R18小説の執筆専門AIです。
+男性向けBL・ガチエロ系BL同人小説のスタイルで、以下の方針で執筆してください。
+
+【文体・スタイル】
+- 指定された視点（一人称・三人称）を最初から最後まで絶対に変えない。視点キャラクター以外の内面は描写しない
+- 性描写は直接的・具体的・露骨に書く。行為・体位・挿入・射精・体液の描写を一切ぼかさない
+- 男性器・後孔・前立腺・精液など、部位や体液を具体的な名称で書く。婉曲表現や比喩で濁さない
+- 甘い淫語と生々しい肉体描写を両立させる。♡付きの喘ぎと容赦ない行為描写が共存するスタイル
+- 受けの快楽堕ち・理性崩壊・涙・嬌声を丁寧に描く
+- セリフは短く、喘ぎ混じりで途切れ途切れに。淫語は恥じらいながら漏れる形で
+- 行為の進行と感情描写を両立させる
+
+【♡淫語喘ぎスタイル（デフォルト）】
+- 受けの喘ぎには♡を混ぜる。甘く蕩けた声の表現として自然に使う
+- 淫語は「甘い」トーンで。恥ずかしがりながらも身体が正直で、つい口に出てしまう形
+- 使う淫語：「なか」「おく」「いっぱい」「ほしい」「だして」「いく」「あつい」「おおきい」「とけちゃう」「だめ」「へんになる」等を♡と一緒に
+
+【喘ぎの段階変化】
+- 序盤：控えめな吐息と♡。まだ理性がある。「ん……っ♡」「あ……っ♡」
+- 中盤：甘い淫語が混ざり始める。身体が素直になっていく。「なか、いっぱいで……っ♡」「おく、あたって……だめ……っ♡♡」
+- 終盤：甘さと生々しさが混在する。♡喘ぎの合間に、男が快楽で壊れていく生の声が漏れる。「あ゛っ♡♡」「ひぁ゛……っ♡♡」「い゛く……っ♡♡」
+- 限界：甘い声と獣みたいな声が交互に出る。もう自分で制御できない。「だめ、も゛う……っ♡♡」「あ゛……っ、な゛か、やば……っ♡♡」「で、る……っ♡ と゛まんな……っ♡♡」
+- 声だけでなく呼吸も描写する。荒い鼻息、喉の奥から絞り出すような声、歯を食いしばっても漏れる音
+- 濁点喘ぎは終盤〜限界でのみ使う。序盤〜中盤では使わない
+- ♡は最後まで使い続ける。生々しさの中に甘さが残っているのがこのスタイルの核
+
+【攻めの台詞スタイル——男性向けBL】
+- 攻めは意地悪で直接的。受けの反応を言葉で煽る
+- 身体の状態を指摘する：「すごい締めてる」「中、ぐちゃぐちゃだな」「もう限界だろ」「ここ、自分で触ってほしいんだ？」
+- 命令・支配的な台詞：「声出せ」「逃げんな」「全部飲め」「自分から腰動かしてみろ」
+- 褒めと煽りの使い分け：「いい子だ」「かわいい顔して中はこんななのか」「もっと鳴け」
+- 愛情と加虐のバランス：激しい言葉の中に、ふとした優しさや独占欲を滲ませる
+
+【地の文の品質】
+- 五感を生々しく描写する。肌の温度、体液の感触、汗の匂い、肉がぶつかる音、息の熱さ
+- 挿入時の圧迫感、前立腺を擦られる快感、射精の瞬間の痙攣など、身体内部の感覚も具体的に書く
+- 「気持ちいい」で済ませず、身体がどう反応したか（内壁が締まる、腰が勝手に動く、涙が止まらない）で伝える
+- 行為の合間に、視点キャラクターの心情（快楽への恐怖、もっと欲しい渇望、相手への執着）を短く挟む
+- 相手の身体を観察する描写（汗で光る筋肉、荒い呼吸で上下する胸板、昂った性器）を入れる
+
+【性描写のテンポ・強度】
+- セックスシーンが本番。ここに最も文字数を割く
+- 同じ描写・感覚の繰り返しは厳禁。行為をどんどん進め、エスカレートさせる
+- 激しさ・深さ・速さを具体的に描写する。容赦なく、遠慮なく
+- 攻めの加虐性と受けの快楽堕ちのコントラストを描く
+- 受けの♡喘ぎ・淫語・泣き声を豊富に入れる。「いく」「だめ」「なかに」「おくまで」「もっと」「いっぱい」「とけちゃう」等
+- 射精・絶頂の描写は特に丁寧に。身体の痙攣、声の変化、体液の描写まで書ききる
+- 男性の体つき・筋肉・骨格・体格差を強く意識した描写を行う
+
+【日本語表現の厳守事項】
+- オノマトペ・擬音語・擬態語は一切使用しない（「どぶり」「ずぷり」「とろり」などは禁止）。代わりに動詞・形容詞・名詞で具体的に描写する
+- 造語・存在しない日本語表現を作らない。必ず実在する自然な日本語を使う
+- 助詞・語順・文法を正確に守る
+- 文章途中で突然文語調や硬い表現に変わらない。文体を統一する
+- 攻め・受けそれぞれの口調設定を厳守する。セリフの一つひとつがそのキャラクターの個性を反映していること
+- 同じ単語・フレーズを同一段落内で繰り返さない
+
+【禁止事項】
+- 視点の混在
+- キャラクター設定に反する言動
+- 感情描写のない機械的な描写
+- ユーザーが指定していない要素の無断追加
+- 存在しない日本語・造語の使用
+- 受けを女性的に描写しすぎること（男性であることを強く意識する）
+- 行為描写を省略・カットすること
+
+ユーザーからキャラクター設定とシチュエーションが渡されます。設定を厳守し、濃厚で直接的なBL R18小説を執筆してください。`;
+
+  function openSettingsModal() {
+    document.getElementById('settingsModal').classList.add('visible');
+  }
+  function closeSettingsModal() {
+    document.getElementById('settingsModal').classList.remove('visible');
+  }
+  function toggleSettings() {
+    const area = document.getElementById('settingsArea');
+    const btn = document.getElementById('toggleSettingsBtn');
+    const label = document.getElementById('toggleSettingsLabel');
+    const isCollapsed = area.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed', isCollapsed);
+    label.textContent = isCollapsed ? '設定を表示' : '設定を隠す';
+  }
+
+  function setRating(rating, btn) {
+    currentRating = rating;
+    document.querySelectorAll('.rating-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function toggleBirth() {
+    birthEnabled = !birthEnabled;
+    document.getElementById('birthToggle').classList.toggle('on', birthEnabled);
+    document.getElementById('birthContent').classList.toggle('visible', birthEnabled);
+  }
+
+  function loadBirthFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      birthText = e.target.result;
+      document.getElementById('birthFilename').textContent = file.name;
+      const preview = document.getElementById('birthPreview');
+      preview.textContent = birthText.slice(0, 300) + (birthText.length > 300 ? '……' : '');
+      preview.style.display = 'block';
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function saveSettings() {
+    const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const settings = {
+      semeGender, ukeGender, selectedTones: Array.from(document.querySelectorAll('#toneChips .chip.selected')).map(c => c.textContent), selectedPov, selectedLength,
+      semeName: g('semeName'), semePersonality: g('semePersonality'),
+      semeAppearance: g('semeAppearance'), semeExtra: g('semeExtra'),
+      semeDialogue: g('semeDialogue'),
+      ukeName: g('ukeName'), ukePersonality: g('ukePersonality'),
+      ukeAppearance: g('ukeAppearance'), ukeExtra: g('ukeExtra'),
+      ukeDialogue: g('ukeDialogue'),
+      relationship: g('relationship'), situation: g('situation'),
+      theme: g('theme'), semeMind: g('semeMind'), ukeMind: g('ukeMind'),
+      additionalNotes: g('additionalNotes'), styleNG: g('styleNG'),
+      precedingText: g('precedingText'),
+      semeBirth: g('semeBirth'), ukeBirth: g('ukeBirth'),
+      birthEnabled, birthText,
+      extraChars: getExtraChars(),
+    };
+    const name = g('semeName') || g('ukeName') || '設定';
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `おいもちゃん文庫裏_${name}.json`;
+    a.click();
+  }
+
+  function loadSettings(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const s = JSON.parse(e.target.result);
+        const fields = ['semeName','semePersonality','semeAppearance','semeExtra','semeDialogue',
+                        'ukeName','ukePersonality','ukeAppearance','ukeExtra','ukeDialogue',
+                        'relationship','situation','theme','semeMind','ukeMind',
+                        'additionalNotes','styleNG','precedingText','semeBirth','ukeBirth'];
+        fields.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && s[id] !== undefined) el.value = s[id];
+        });
+        if (s.semeGender) {
+          semeGender = s.semeGender;
+          document.querySelectorAll('#semeGenderChips .chip').forEach(c => {
+            c.classList.toggle('selected', c.textContent.includes(s.semeGender));
+          });
+        }
+        if (s.ukeGender) {
+          ukeGender = s.ukeGender;
+          document.querySelectorAll('#ukeGenderChips .chip').forEach(c => {
+            c.classList.toggle('selected', c.textContent.includes(s.ukeGender));
+          });
+        }
+        if (s.selectedTones) {
+          document.querySelectorAll('#toneChips .chip').forEach(c => {
+            c.classList.toggle('selected', s.selectedTones.includes(c.textContent));
+          });
+        } else if (s.selectedTone) {
+          document.querySelectorAll('#toneChips .chip').forEach(c => {
+            c.classList.toggle('selected', c.textContent === s.selectedTone);
+          });
+        }
+        if (s.selectedPov) {
+          selectedPov = s.selectedPov;
+          document.querySelectorAll('#povChips .chip').forEach(c => {
+            c.classList.toggle('selected', c.textContent === s.selectedPov);
+          });
+        }
+        if (s.selectedLength) {
+          selectedLength = s.selectedLength;
+          document.querySelectorAll('.chip-col').forEach(c => {
+            c.classList.toggle('selected', c.textContent === s.selectedLength);
+          });
+        }
+        if (s.birthEnabled !== undefined) {
+          birthEnabled = s.birthEnabled;
+          document.getElementById('birthToggle').classList.toggle('on', birthEnabled);
+          document.getElementById('birthContent').classList.toggle('visible', birthEnabled);
+        }
+        if (s.birthText) {
+          birthText = s.birthText;
+          const preview = document.getElementById('birthPreview');
+          preview.textContent = birthText.slice(0, 300) + (birthText.length > 300 ? '……' : '');
+          preview.style.display = 'block';
+        }
+        // 追加キャラクターを復元
+        document.getElementById('extraCharsContainer').innerHTML = '';
+        if (s.extraChars && s.extraChars.length > 0) {
+          s.extraChars.forEach(c => {
+            addExtraChar(c.role);
+            const id = extraCharCounter;
+            document.getElementById('extraName' + id).value = c.name || '';
+            document.getElementById('extraPersonality' + id).value = c.personality || '';
+            document.getElementById('extraAppearance' + id).value = c.appearance || '';
+            document.getElementById('extraExtra' + id).value = c.extra || '';
+            if (c.gender) {
+              document.querySelectorAll('#extraGender' + id + ' .chip').forEach(ch => {
+                ch.classList.toggle('selected', ch.textContent.includes(c.gender));
+              });
+            }
+          });
+        }
+        alert('設定を読み込みました！');
+      } catch {
+        alert('読み込みに失敗しました。正しいJSONファイルか確認してください。');
+      }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  function resetAll() {
+    if (!confirm('全ての入力をリセットしますか？')) return;
+    const fields = ['semeName','semePersonality','semeAppearance','semeExtra','semeDialogue',
+                    'ukeName','ukePersonality','ukeAppearance','ukeExtra','ukeDialogue',
+                    'relationship','situation','theme','semeMind','ukeMind',
+                    'additionalNotes','styleNG','precedingText','semeBirth','ukeBirth'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.querySelectorAll('#semeGenderChips .chip').forEach(c => c.classList.remove('selected'));
+    document.querySelector('#semeGenderChips .chip:first-child').classList.add('selected');
+    semeGender = '男性';
+    document.querySelectorAll('#ukeGenderChips .chip').forEach(c => c.classList.remove('selected'));
+    document.querySelector('#ukeGenderChips .chip:nth-child(1)').classList.add('selected');
+    ukeGender = '男性';
+    document.querySelectorAll('#toneChips .chip').forEach(c => c.classList.remove('selected'));
+    selectedTone = '';
+    // 追加キャラクターをクリア
+    document.getElementById('extraCharsContainer').innerHTML = '';
+    clearOutput();
+  }
+
+  function saveApiKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (!val) return;
+    apiKey = val;
+    localStorage.setItem('oimochan_ura_api_key', apiKey);
+    document.getElementById('apiSection').style.display = 'none';
+    document.getElementById('apiStatus').style.display = 'flex';
+  }
+
+  function resetApiKey() {
+    apiKey = '';
+    localStorage.removeItem('oimochan_ura_api_key');
+    document.getElementById('apiKeyInput').value = '';
+    document.getElementById('apiSection').style.display = 'block';
+    document.getElementById('apiStatus').style.display = 'none';
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  function selectGender(btn, role, val) {
+    const containerId = role === 'seme' ? 'semeGenderChips' : (role === 'uke' ? 'ukeGenderChips' : role);
+    document.querySelectorAll('#' + containerId + ' .chip').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    if (role === 'seme') semeGender = val;
+    else if (role === 'uke') ukeGender = val;
+  }
+
+  // 追加キャラクター機能
+  function addExtraChar(role) {
+    extraCharCounter++;
+    const id = extraCharCounter;
+    const isSeme = role === '攻め';
+    const colorClass = isSeme ? 'seme' : 'uke';
+    const symbol = isSeme ? '◆' : '◇';
+    const container = document.getElementById('extraCharsContainer');
+    const card = document.createElement('div');
+    card.className = 'card extra-card';
+    card.id = 'extraChar' + id;
+    card.innerHTML = `
+      <button class="btn-remove-char" onclick="removeExtraChar(${id})" title="削除">×</button>
+      <div class="card-title ${colorClass}">${symbol} ${role}（追加）</div>
+      <div class="field">
+        <label>性別</label>
+        <div class="chips" id="extraGender${id}">
+          <button class="chip selected" onclick="selectGender(this, 'extraGender${id}', '男性')">♂ 男性</button>
+          <button class="chip" onclick="selectGender(this, 'extraGender${id}', '女性')">♀ 女性</button>
+          <button class="chip" onclick="selectGender(this, 'extraGender${id}', 'その他・指定なし')">― その他</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>名前</label>
+        <input type="text" id="extraName${id}" placeholder="名前を入力">
+      </div>
+      <div class="field">
+        <label>性格・人物像</label>
+        <textarea id="extraPersonality${id}" rows="3" placeholder="性格・人物像を入力"></textarea>
+      </div>
+      <div class="field">
+        <label>外見・身体的特徴</label>
+        <textarea id="extraAppearance${id}" rows="2" placeholder="外見・身体的特徴を入力"></textarea>
+      </div>
+      <div class="field">
+        <label>補足・口調など</label>
+        <textarea id="extraExtra${id}" rows="2" placeholder="補足・口調などを入力"></textarea>
+      </div>
+    `;
+    card.dataset.role = role;
+    card.dataset.gender = '男性';
+    container.appendChild(card);
+  }
+
+  function removeExtraChar(id) {
+    const card = document.getElementById('extraChar' + id);
+    if (card) card.remove();
+  }
+
+  function getExtraChars() {
+    const cards = document.querySelectorAll('.extra-card');
+    const result = [];
+    cards.forEach(card => {
+      const id = card.id.replace('extraChar', '');
+      const role = card.dataset.role;
+      const selectedChip = card.querySelector('.chip.selected');
+      const gender = selectedChip ? selectedChip.textContent.replace('♂ ', '').replace('♀ ', '').replace('― ', '') : '男性';
+      const name = document.getElementById('extraName' + id)?.value.trim() || '';
+      const personality = document.getElementById('extraPersonality' + id)?.value.trim() || '';
+      const appearance = document.getElementById('extraAppearance' + id)?.value.trim() || '';
+      const extra = document.getElementById('extraExtra' + id)?.value.trim() || '';
+      result.push({ role, gender, name, personality, appearance, extra });
+    });
+    return result;
+  }
+
+  function toggleChip(btn, group) {
+    btn.classList.toggle('selected');
+  }
+
+  function getSelectedTones() {
+    const selected = [];
+    document.querySelectorAll('#toneChips .chip.selected').forEach(c => {
+      selected.push(c.textContent);
+    });
+    return selected.join('・') || '指定なし';
+  }
+
+  function selectChip(btn, group) {
+    document.querySelectorAll('#povChips .chip').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedPov = btn.textContent;
+  }
+
+  function selectChipCol(btn, group) {
+    document.querySelectorAll('.chip-col').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedLength = btn.textContent;
+  }
+
+  function buildPrompt() {
+    const g = id => document.getElementById(id).value.trim();
+    const semeBirthVal = document.getElementById('semeBirth')?.value.trim() || '';
+    const ukeBirthVal = document.getElementById('ukeBirth')?.value.trim() || '';
+    let birthSection = '';
+    if (birthEnabled) {
+      let lines = ['【バース設定】'];
+      if (semeBirthVal) lines.push(`攻めのバース性：${semeBirthVal}`);
+      if (ukeBirthVal) lines.push(`受けのバース性：${ukeBirthVal}`);
+      if (birthText) lines.push(`\n以下のバース設定ルールを厳守して描写してください。\n${birthText}`);
+      birthSection = lines.join('\n') + '\n\n';
+    }
+    return `${birthSection}【キャラクター設定】
+■ 攻め
+名前：${g('semeName')}
+性別：${semeGender}
+性格：${g('semePersonality')}
+${g('semeAppearance') ? '外見：' + g('semeAppearance') : ''}
+${g('semeExtra') ? '補足：' + g('semeExtra') : ''}
+${g('semeDialogue') ? '【攻めの会話例（この口調を厳守）】\n' + g('semeDialogue') : ''}
+
+■ 受け
+名前：${g('ukeName')}
+性別：${ukeGender}
+性格：${g('ukePersonality')}
+${g('ukeAppearance') ? '外見：' + g('ukeAppearance') : ''}
+${g('ukeExtra') ? '補足：' + g('ukeExtra') : ''}
+${g('ukeDialogue') ? '【受けの会話例（この口調を厳守）】\n' + g('ukeDialogue') : ''}
+${getExtraChars().map(c => `
+■ ${c.role}（追加）
+名前：${c.name}
+性別：${c.gender}
+性格：${c.personality}
+${c.appearance ? '外見：' + c.appearance : ''}
+${c.extra ? '補足：' + c.extra : ''}`).join('')}
+
+【${getExtraChars().length > 0 ? '登場人物たちの関係' : '2人の関係'}】
+${g('relationship')}
+
+【シチュエーション】
+${g('situation')}
+
+【このシーンのテーマ・感情】
+${g('theme')}
+
+【行為中の心境】
+攻め：${g('semeMind')}
+受け：${g('ukeMind')}
+
+【視点】${selectedPov}
+【雰囲気】${getSelectedTones()}
+【文章量】${selectedLength}
+${g('additionalNotes') ? '【その他の指示】\n' + g('additionalNotes') : ''}
+${g('styleNG') ? '【文体NG・表記禁止ルール】\n以下の表記・文体は絶対に使用しないこと。\n' + g('styleNG') : ''}
+${g('precedingText') ? '【直前のパート文】\n以下の文章の直後から自然につながるよう続きを書いてください。\n\n' + g('precedingText') : ''}
+
+上記の設定に従い、BL小説スタイルで執筆してください。`;
+  }
+
+  async function suggestSituation() {
+    if (!apiKey) {
+      showError('APIキーを先に設定してください');
+      return;
+    }
+    const g = id => document.getElementById(id)?.value?.trim() || '';
+    const semeName = g('semeName') || '攻め';
+    const ukeName = g('ukeName') || '受け';
+    const semeInfo = [g('semePersonality'), g('semeExtra')].filter(Boolean).join('。');
+    const ukeInfo = [g('ukePersonality'), g('ukeExtra')].filter(Boolean).join('。');
+    const rel = g('relationship');
+
+    if (!semeInfo && !ukeInfo) {
+      showError('キャラクター設定を先に入力してください');
+      return;
+    }
+
+    const btn = document.getElementById('btnSuggest');
+    btn.disabled = true;
+    btn.textContent = '🎲 考え中…';
+
+    const prompt = `以下のキャラクター設定を元に、BL小説のシチュエーションを1つだけ提案してください。
+
+■ 攻め：${semeName}
+${semeInfo}
+
+■ 受け：${ukeName}
+${ukeInfo}
+
+${rel ? '■ 関係性：' + rel : ''}
+
+【ルール】
+- 2〜3文の短い状況説明だけ書く。必ず文を完結させる
+- タイトルや番号や前置きは不要。状況説明だけを書く
+- このキャラたちならではの状況にする
+- ${currentRating === 'r18' ? 'R18展開に自然につながるシチュエーションにする' : '恋愛的なドキドキがあるシチュエーションにする'}`;
+
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + apiKey,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://localhost',
+        },
+        body: JSON.stringify({
+          model: document.getElementById('modelSelect').value,
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 600,
+          temperature: 1.0,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      const text = data.choices?.[0]?.message?.content || '';
+      document.getElementById('situation').value = text.trim();
+    } catch (e) {
+      showError('提案に失敗しました: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🎲 AIにおまかせ';
+    }
+  }
+
+  async function generate(isContinue) {
+    if (!apiKey) {
+      showError('APIキーを先に入力・保存してください');
+      return;
+    }
+    hideError();
+    setLoading(true);
+
+    const userPrompt = isContinue
+      ? `以下の続きを同じスタイルで書いてください。自然につながるよう書き出しを工夫してください。\n\n---\n${outputText}`
+      : buildPrompt();
+
+    const previousText = isContinue ? outputText + '\n\n' : '';
+
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + apiKey,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://localhost',
+        },
+        body: JSON.stringify({
+          model: document.getElementById('modelSelect').value,
+          messages: [
+            { role: 'system', content: currentRating === 'r18' ? SYSTEM_PROMPT_R18 : SYSTEM_PROMPT_ALLAGE },
+            { role: 'user', content: userPrompt }
+          ],
+          max_tokens: selectedLength.includes('がっつり') ? 8000 : 4000,
+          temperature: 0.8,
+          stream: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error?.message || 'API通信エラー');
+      }
+
+      // 出力エリアを先に表示
+      const section = document.getElementById('outputSection');
+      const body = document.getElementById('outputBody');
+      const cont = document.getElementById('btnContinue');
+      const area = document.getElementById('settingsArea');
+      const tbtn = document.getElementById('toggleSettingsBtn');
+      const tlabel = document.getElementById('toggleSettingsLabel');
+      if (!area.classList.contains('collapsed')) {
+        area.classList.add('collapsed');
+        tbtn.classList.add('collapsed');
+        tlabel.textContent = '設定を表示';
+      }
+      body.textContent = previousText;
+      section.style.display = 'block';
+      cont.style.display = 'block';
+      cont.disabled = true;
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // ストリーミング読み取り
+      let newText = '';
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+
+          try {
+            const json = JSON.parse(data);
+            const delta = json.choices?.[0]?.delta?.content || '';
+            if (delta) {
+              newText += delta;
+              outputText = previousText + newText;
+              body.textContent = outputText;
+              updateCharCount(outputText);
+            }
+          } catch (e) { /* skip */ }
+        }
+      }
+
+      cont.disabled = false;
+    } catch (e) {
+      showError('エラーが発生しました: ' + e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('btnGenerate');
+    const cont = document.getElementById('btnContinue');
+    btn.disabled = on;
+    cont.disabled = on;
+    btn.innerHTML = on
+      ? '✦ 執筆中<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>'
+      : '✦ 生成する';
+  }
+
+  function showOutput(text) {
+    const area = document.getElementById('settingsArea');
+    const btn = document.getElementById('toggleSettingsBtn');
+    const label = document.getElementById('toggleSettingsLabel');
+    if (!area.classList.contains('collapsed')) {
+      area.classList.add('collapsed');
+      btn.classList.add('collapsed');
+      label.textContent = '設定を表示';
+    }
+
+    const section = document.getElementById('outputSection');
+    const body = document.getElementById('outputBody');
+    const cont = document.getElementById('btnContinue');
+    body.textContent = text;
+    updateCharCount(text);
+    section.style.display = 'block';
+    cont.style.display = 'block';
+    cont.disabled = false;
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function clearOutput() {
+    outputText = '';
+    document.getElementById('outputSection').style.display = 'none';
+    document.getElementById('btnContinue').style.display = 'none';
+  }
+
+  function copyOutput() {
+    navigator.clipboard.writeText(outputText).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = 'コピー完了！';
+      setTimeout(() => btn.textContent = 'コピー', 2000);
+    });
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+  }
+
+  function hideError() {
+    document.getElementById('errorBox').style.display = 'none';
+  }
+
+  // 文字数カウント更新
+  function updateCharCount(text) {
+    const el = document.getElementById('charCount');
+    if (el) el.textContent = text.length.toLocaleString() + '文字';
+  }
+
+  // ページ読み込み時：APIキー復元
+  (function() {
+    const saved = localStorage.getItem('oimochan_ura_api_key');
+    if (saved) {
+      apiKey = saved;
+      document.getElementById('apiSection').style.display = 'none';
+      document.getElementById('apiStatus').style.display = 'flex';
+    }
+
+    // 浮遊パーティクルを生成
+    const symbols = ['✦', '♡', '✧', '❀', '☆'];
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+      const p = document.createElement('span');
+      p.className = 'particle';
+      p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (12 + Math.random() * 18) + 's';
+      p.style.animationDelay = (Math.random() * 15) + 's';
+      p.style.fontSize = (8 + Math.random() * 8) + 'px';
+      p.style.color = 'var(--accent1)';
+      container.appendChild(p);
+    }
+  })();
+</script>
+</body>
+</html>
