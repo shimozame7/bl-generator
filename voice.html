@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>おいもちゃんシチュボ（裏）</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Yomogi&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080f;
+    --bg2: #101018;
+    --bg3: #1a1825;
+    --border: #2a2045;
+    --border-hi: #8040e0;
+    --accent1: #a060ff;
+    --accent2: #ff60c0;
+    --text: #e8e0f5;
+    --text-muted: #8878a8;
+    --text-dim: #5a4878;
+    --btn-bg: linear-gradient(135deg, #7020d0, #c040a0);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse 50% 40% at 20% 10%, rgba(120,40,220,0.12), transparent), radial-gradient(ellipse 40% 40% at 80% 80%, rgba(200,40,160,0.08), transparent), radial-gradient(ellipse 30% 30% at 50% 50%, rgba(160,96,255,0.06), transparent); pointer-events: none; z-index: 0; }
+  .wrap { position: relative; z-index: 1; max-width: 740px; margin: 0 auto; padding: 48px 24px 120px; }
+  header { text-align: center; margin-bottom: 48px; animation: fadeDown 0.8s ease both; }
+  .header-label { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 11px; letter-spacing: 0.5em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+  header h1 { font-family: 'Yomogi', cursive; font-size: 24px; font-weight: 400; letter-spacing: 0.08em; color: var(--accent1); margin-bottom: 8px; -webkit-text-stroke: 0.6px currentColor; }
+  .header-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 0.3em; }
+  .api-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; animation: fadeUp 0.6s 0.2s ease both; }
+  .api-section label { display: block; font-size: 11px; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 10px; }
+  .api-row { display: flex; gap: 10px; }
+  .api-status { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .api-status button { background: none; border: none; color: var(--accent1); cursor: pointer; font-size: 12px; font-family: inherit; }
+  .api-status button:hover { color: var(--accent2); }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 28px; animation: fadeUp 0.6s 0.3s ease both; }
+  .tab { padding: 10px 20px; font-size: 13px; font-family: 'M PLUS Rounded 1c', sans-serif; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin-bottom: -1px; letter-spacing: 0.05em; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent1); }
+  .panel { display: none; animation: fadeUp 0.4s ease both; }
+  .panel.active { display: block; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .card-title { font-size: 11px; letter-spacing: 0.35em; margin-bottom: 16px; font-family: 'M PLUS Rounded 1c', sans-serif; }
+  .card-title.seme { color: #ff70b0; }
+  .card-title.uke { color: #90a0ff; }
+  .card-title.scene { color: var(--accent1); }
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.1em; }
+  input[type="text"], input[type="password"], textarea, select { width: 100%; background: rgba(10, 8, 20, 0.8); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s; resize: both; }
+  input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus { border-color: var(--border-hi); }
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 12px; font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+  .chip:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip.selected { background: rgba(155, 107, 192, 0.15); border-color: var(--accent1); color: var(--text); }
+  .chips-col { display: flex; flex-direction: column; gap: 8px; }
+  .chip-col { padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border); background: none; color: var(--text-muted); font-size: 13px; font-family: 'M PLUS Rounded 1c', sans-serif; cursor: pointer; transition: all 0.2s; text-align: left; }
+  .chip-col:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip-col.selected { background: rgba(155, 107, 192, 0.15); border-color: var(--accent1); color: var(--text); }
+  .btn-area { display: flex; gap: 12px; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 14px 24px; background: rgba(8,8,15,0.95); border-top: 2px solid var(--border); max-width: 740px; margin: 0 auto; }
+  .btn-generate { flex: 1; padding: 16px; border: none; border-radius: 12px; background: var(--btn-bg); color: white; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 18px; letter-spacing: 0.3em; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+  .btn-generate:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-continue { padding: 16px 20px; border: 1px solid var(--border); border-radius: 12px; background: none; color: var(--accent1); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .btn-continue:hover { background: rgba(155, 107, 192, 0.15); border-color: var(--border-hi); }
+  .btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
+  .error-box { margin-top: 16px; padding: 12px 16px; background: rgba(180, 30, 60, 0.15); border: 1px solid rgba(200, 50, 80, 0.4); border-radius: 10px; font-size: 13px; color: #ff9090; display: none; }
+  .output-section { margin-top: 48px; display: none; animation: fadeUp 0.5s ease both; }
+  .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .output-label { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; letter-spacing: 0.3em; color: var(--accent1); }
+  .char-count { font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); margin-left: 8px; }
+  .output-actions { display: flex; gap: 12px; }
+  .output-actions button { background: none; border: none; font-size: 12px; cursor: pointer; font-family: 'M PLUS Rounded 1c', sans-serif; transition: color 0.2s; letter-spacing: 0.05em; }
+  .btn-copy { color: var(--accent1); }
+  .btn-copy:hover { color: var(--accent2); }
+  .btn-clear { color: var(--text-dim); }
+  .btn-clear:hover { color: var(--text-muted); }
+  .output-body { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 32px 36px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; line-height: 2.4; color: #e8e0f5; white-space: pre-wrap; word-break: break-all; }
+  .settings-gear { position: fixed; top: 16px; left: 16px; z-index: 100; width: 44px; height: 44px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--border); color: var(--text-muted); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .settings-gear:hover { background: var(--bg3); color: var(--text); border-color: var(--border-hi); transform: rotate(30deg); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .modal-close:hover { background: var(--bg3); color: var(--text); }
+  .modal-title { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 18px; letter-spacing: 0.2em; color: var(--text); margin-bottom: 20px; padding-right: 30px; }
+  .settings-area { transition: all 0.3s; overflow: hidden; }
+  .settings-area.collapsed { max-height: 0; opacity: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+  .toggle-settings-btn { width: 100%; padding: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .toggle-settings-btn:hover { border-color: var(--border-hi); color: var(--text); }
+  .arrow-icon { transition: transform 0.3s; display: inline-block; }
+  .toggle-settings-btn.collapsed .arrow-icon { transform: rotate(-90deg); }
+  .rating-toggle-area { display: flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg2); }
+  .rating-option { flex: 1; padding: 12px; background: none; border: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; }
+  .rating-option.active { background: linear-gradient(135deg, rgba(112,32,208,0.5), rgba(192,64,160,0.5)); color: var(--text); }
+  .rating-option:hover:not(.active) { background: rgba(160,96,255,0.1); color: var(--text); }
+  .model-select-area { margin-bottom: 12px; }
+  .model-select-area label { display: block; font-size: 11px; letter-spacing: 0.3em; color: var(--text-muted); margin-bottom: 8px; }
+  .model-select-area select { width: 100%; background: rgba(10, 8, 20, 0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 13px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239b6bc0' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  .birth-section { margin-bottom: 12px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .birth-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; transition: background 0.2s; }
+  .birth-toggle-row:hover { background: rgba(160,96,255,0.1); }
+  .birth-toggle-label { font-size: 12px; letter-spacing: 0.2em; color: var(--text-muted); }
+  .toggle-switch { width: 40px; height: 22px; background: var(--border); border-radius: 999px; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .toggle-switch.on { background: var(--accent1); }
+  .toggle-switch::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: left 0.2s; }
+  .toggle-switch.on::after { left: 21px; }
+  .birth-content { padding: 0 16px 16px; display: none; }
+  .birth-content.visible { display: block; }
+  .birth-file-label { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; display: block; letter-spacing: 0.1em; }
+  .birth-file-row { display: flex; gap: 8px; align-items: center; }
+  .btn-file-select { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .btn-file-select:hover { border-color: var(--border-hi); color: var(--text); }
+  .birth-filename { font-size: 11px; color: var(--text-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .birth-preview { margin-top: 10px; padding: 10px 12px; background: rgba(20,10,35,0.6); border: 1px solid var(--border); border-radius: 8px; font-size: 11px; color: var(--text-muted); max-height: 80px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; display: none; }
+  #birthFileInput { display: none; }
+  .save-load-area { display: flex; gap: 8px; margin-bottom: 12px; }
+  .btn-save-load { flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 10px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; text-align: center; }
+  .btn-save-load:hover { border-color: var(--border-hi); color: var(--text); background: rgba(160,96,255,0.1); }
+  #loadFileInput { display: none; }
+  .btn-reset { width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 10px; background: none; color: var(--text-dim); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; margin-bottom: 24px; }
+  .btn-reset:hover { border-color: #c06060; color: #e08080; background: rgba(150,40,40,0.1); }
+  .loading-dots span { animation: blink 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+  .divider { text-align: center; color: var(--text-dim); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 16px; letter-spacing: 0.5em; margin: 8px 0 20px; }
+  .pw-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .pw-box { text-align: center; padding: 40px 32px; max-width: 360px; width: 100%; }
+  .pw-title { font-family: 'Yomogi', cursive; font-size: 24px; color: var(--accent1); margin-bottom: 8px; letter-spacing: 0.08em; }
+  .pw-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; letter-spacing: 0.1em; }
+  .pw-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 14px; outline: none; text-align: center; transition: border-color 0.2s; }
+  .pw-input:focus { border-color: var(--border-hi); }
+  .pw-input::placeholder { color: var(--text-dim); }
+  .pw-btn { width: 100%; margin-top: 16px; padding: 14px; border: none; border-radius: 999px; background: linear-gradient(135deg, #7020d0, #c040a0); color: white; font-family: 'Yomogi', cursive; font-size: 15px; letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s; -webkit-text-stroke: 0.4px currentColor; box-shadow: 0 0 20px rgba(160,96,255,0.3); }
+  .pw-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .pw-btn:active { transform: translateY(0); }
+  .pw-error { font-size: 12px; color: #d06070; margin-top: 12px; display: none; }
+  .chip, .chip-col, .btn-generate, .btn-continue, .btn-save-load, .btn-reset,
+  .btn-add-char, .rating-option, .toggle-settings-btn, .tab, .pw-btn {
+    font-family: 'Yomogi', cursive;
+    -webkit-text-stroke: 0.4px currentColor;
+  }
+  .chip, .chip-col, .btn-continue, .btn-save-load, .toggle-settings-btn, .btn-file-select {
+    border-width: 2px;
+  }
+  .btn-reset, .btn-add-char { border-width: 2px; }
+  .rating-toggle-area { border-width: 2px; }
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle { position: absolute; font-size: 12px; opacity: 0; animation: floatUp linear infinite; }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-10vh) rotate(360deg); }
+  }
+  .oimo-illust { margin-bottom: 20px; }
+  .oimo-illust svg { filter: drop-shadow(0 2px 8px rgba(155,107,192,0.2)); }
+  .sparkle-wrap { position: relative; display: inline-block; }
+  .sparkle { position: absolute; font-size: 10px; opacity: 0.6; animation: twinkle 2s ease-in-out infinite; }
+  .sparkle:nth-child(1) { top: -8px; left: -20px; animation-delay: 0s; }
+  .sparkle:nth-child(2) { top: -5px; right: -20px; animation-delay: 0.7s; }
+  .sparkle:nth-child(3) { bottom: -5px; left: 10px; animation-delay: 1.4s; }
+  .sparkle:nth-child(4) { bottom: -8px; right: 10px; animation-delay: 0.3s; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 0.8; transform: scale(1.2); } }
+  .add-char-area { display: flex; gap: 8px; margin-bottom: 16px; }
+  .btn-ai-suggest { width: 100%; padding: 10px; margin-top: 8px; border: 2px dashed var(--border); border-radius: 10px; background: none; color: var(--accent1); font-family: 'Yomogi', cursive; font-size: 13px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.1em; -webkit-text-stroke: 0.4px currentColor; }
+  .btn-ai-suggest:hover { border-color: var(--border-hi); background: rgba(160,96,255,0.08); }
+  .btn-ai-suggest:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-add-char { flex: 1; padding: 10px; border: 1px dashed var(--border); border-radius: 10px; background: none; color: var(--text-muted); font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+  .btn-add-char:hover { border-color: var(--border-hi); color: var(--text); background: rgba(160,96,255,0.08); }
+  .extra-card { position: relative; }
+  .btn-remove-char { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: none; border: 1px solid var(--border); color: var(--text-dim); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .btn-remove-char:hover { background: rgba(200,80,80,0.1); border-color: #d06070; color: #d06070; }
+</style>
+</head>
+<body>
+
+<!-- 浮遊パーティクル -->
+<div class="particles" id="particles"></div>
+
+<!-- パスワード画面 -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="oimo-illust">
+      <svg width="90" height="120" viewBox="0 0 90 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M25 35 L30 100 Q30 108 45 108 Q60 108 60 100 L65 35Z" fill="rgba(200,170,230,0.3)" stroke="#c0a0d8" stroke-width="1.5" />
+        <path d="M27 42 L31 98 Q31 105 45 105 Q59 105 59 98 L63 42Z" fill="url(#sodaGrad)" />
+        <circle cx="35" cy="85" r="2.5" fill="rgba(255,255,255,0.4)"><animate attributeName="cy" values="85;50;40" dur="3s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.5;0.3;0" dur="3s" repeatCount="indefinite" /></circle>
+        <circle cx="50" cy="90" r="2" fill="rgba(255,255,255,0.3)"><animate attributeName="cy" values="90;60;45" dur="3.5s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.4;0.3;0" dur="3.5s" repeatCount="indefinite" /></circle>
+        <circle cx="42" cy="80" r="1.5" fill="rgba(255,255,255,0.4)"><animate attributeName="cy" values="80;55;42" dur="4s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.5;0.2;0" dur="4s" repeatCount="indefinite" /></circle>
+        <circle cx="55" cy="75" r="2" fill="rgba(255,255,255,0.3)"><animate attributeName="cy" values="75;48;38" dur="2.8s" repeatCount="indefinite" /><animate attributeName="opacity" values="0.4;0.2;0" dur="2.8s" repeatCount="indefinite" /></circle>
+        <ellipse cx="45" cy="35" rx="18" ry="14" fill="#f8f0ff" />
+        <ellipse cx="45" cy="35" rx="18" ry="14" fill="url(#iceGrad)" />
+        <ellipse cx="39" cy="30" rx="5" ry="3" fill="rgba(255,255,255,0.5)" transform="rotate(-15 39 30)" />
+        <rect x="54" y="5" width="4" height="70" rx="2" fill="#e890b8" transform="rotate(8 56 40)" />
+        <rect x="54" y="5" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 9)" /><rect x="54" y="17" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 21)" /><rect x="54" y="29" width="4" height="8" rx="2" fill="#d070a0" transform="rotate(8 56 33)" />
+        <circle cx="38" cy="22" r="5" fill="#d870a0" /><circle cx="39.5" cy="20" r="1.5" fill="rgba(255,255,255,0.4)" />
+        <path d="M38 17 Q42 8 48 10" stroke="#80b080" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        <ellipse cx="47" cy="11" rx="4" ry="2.5"fill="#a0d8a0" transform="rotate(-10 47 11)" />
+        <polygon points="12,20 13.5,24 18,24 14.5,27 16,31 12,28.5 8,31 9.5,27 6,24 10.5,24" fill="#d8b0e8" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" /></polygon>
+        <polygon points="78,45 79,48 82,48 79.5,50 80.5,53 78,51 75.5,53 76.5,50 74,48 77,48" fill="#c8a0e0" opacity="0.5"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite" /></polygon>
+        <circle cx="18" cy="60" r="1.5" fill="#d0a8e0" opacity="0.5"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="1.8s" repeatCount="indefinite" /></circle>
+        <circle cx="75" cy="80" r="1.5" fill="#c8a0e0" opacity="0.5"><animate attributeName="opacity" values="0.4;0.8;0.4" dur="2.2s" repeatCount="indefinite" /></circle>
+        <defs>
+          <linearGradient id="sodaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8a0e8" /><stop offset="50%" stop-color="#b080d8" /><stop offset="100%" stop-color="#9868c8" /></linearGradient>
+          <radialGradient id="iceGrad" cx="40%" cy="35%"><stop offset="0%" stop-color="#fff8ff" /><stop offset="100%" stop-color="#e8d8f0" /></radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="pw-title">✩ おいもちゃんシチュボ（裏）✩</div>
+    <div class="pw-sub">パスワードを入力してね</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">はいる</button>
+    <div class="pw-error" id="pwError">パスワードが違うよ〜</div>
+  </div>
+</div>
+
+<button class="settings-gear" onclick="openSettingsModal()" title="API設定">⚙</button>
+
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettingsModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeSettingsModal()">×</button>
+    <div class="modal-title">⚙ API 設定</div>
+    <div class="api-section" id="apiSection">
+      <label>OpenRouter APIキー</label>
+      <div class="api-row">
+        <input type="password" id="apiKeyInput" placeholder="sk-or-..." style="flex:1">
+        <button class="chip" style="border-radius:8px;padding:10px 20px;" onclick="saveApiKey()">保存</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:8px;">キーはこのページ内にのみ保持されます（外部送信なし）</div>
+    </div>
+    <div class="api-status" id="apiStatus" style="display:none;">
+      <span style="color:#90d090;">✓ APIキー設定済み</span>
+      <button onclick="resetApiKey()">変更</button>
+    </div>
+    <div class="model-select-area" style="margin-top:16px;">
+      <label>使用モデル</label>
+      <select id="modelSelect">
+        <option value="deepseek/deepseek-v4-pro">DeepSeek V4 Pro（高品質・セール中）</option>
+        <option value="deepseek/deepseek-v4-flash">DeepSeek V4 Flash（高速・激安）</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-label">BL Situation Voice Script Generator</div>
+    <h1><span class="sparkle-wrap"><span class="sparkle">✦</span><span class="sparkle">✧</span><span class="sparkle">✦</span><span class="sparkle">✧</span>✩ おいもちゃんシチュボ（裏）✩</span></h1>
+    <div class="header-sub">— R18 BLシチュエーションボイス台本ジェネレーター —</div>
+  </header>
+
+  <div class="rating-toggle-area">
+    <button class="rating-option active" onclick="setRating('r18', this)">🌹 R18モード</button>
+    <button class="rating-option" onclick="setRating('all', this)">🌸 全年齢モード</button>
+  </div>
+
+  <button class="toggle-settings-btn" id="toggleSettingsBtn" onclick="toggleSettings()">
+    <span class="arrow-icon">▼</span>
+    <span id="toggleSettingsLabel">設定を隠す</span>
+  </button>
+
+  <div class="settings-area" id="settingsArea">
+
+  <div class="save-load-area">
+    <button class="btn-save-load" onclick="saveSettings()">💾 設定を保存</button>
+    <button class="btn-save-load" onclick="document.getElementById('loadFileInput').click()">📂 設定を読み込む</button>
+    <input type="file" id="loadFileInput" accept=".json" onchange="loadSettings(event)">
+  </div>
+
+  <button class="btn-reset" onclick="resetAll()">❌ 全ての入力をリセット</button>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('chara', this)">キャラクター</button>
+    <button class="tab" onclick="switchTab('scene', this)">シーン設定</button>
+    <button class="tab" onclick="switchTab('style', this)">スタイル</button>
+  </div>
+
+  <div class="panel active" id="panel-chara">
+    <div class="card">
+      <div class="card-title seme">◆ 攻め（セリフを喋る側 / 声の主）</div>
+      <div class="field">
+        <label>性別</label>
+        <div class="chips" id="semeGenderChips">
+          <button class="chip selected" onclick="selectGender(this, 'seme', '男性')">♂ 男性</button>
+          <button class="chip" onclick="selectGender(this, 'seme', '女性')">♀ 女性</button>
+          <button class="chip" onclick="selectGender(this, 'seme', 'その他・指定なし')">― その他</button>
+        </div>
+      </div>
+      <div class="field"><label>名前</label><input type="text" id="semeName" placeholder="例：城戸朔也"></div>
+      <div class="field"><label>性格・人物像</label><textarea id="semePersonality" rows="3" placeholder="例：クールで寡黙。普段は感情を表に出さないが、好きな相手には独占欲が強い。エリート外科医。"></textarea></div>
+      <div class="field"><label>外見・身体的特徴</label><textarea id="semeAppearance" rows="2" placeholder="例：長身で広い肩幅。短い金髪。鋭い青灰色の目。古傷が体のあちこちにある。大きな手。"></textarea></div>
+      <div class="field"><label>口調・話し方の特徴</label><textarea id="semeExtra" rows="2" placeholder="例：敬語を使わない。低くて静かな声。ぶっきらぼうだが優しさが滲む。"></textarea></div>
+      <div class="field"><label>セリフサンプル（口調の参考に）</label><textarea id="semeDialogue" rows="3" placeholder="例：&#10;「……別に、お前のためじゃねえよ」&#10;「うるさい。黙って食え」&#10;「……寝れねえなら、こっち来い」&#10;「は？ 触んな」&#10;「……好きだ」"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title uke">◇ 受け（セリフを聞く側 / 相手役）</div>
+      <div class="field">
+        <label>性別</label>
+        <div class="chips" id="ukeGenderChips">
+          <button class="chip selected" onclick="selectGender(this, 'uke', '男性')">♂ 男性</button>
+          <button class="chip" onclick="selectGender(this, 'uke', '女性')">♀ 女性</button>
+          <button class="chip" onclick="selectGender(this, 'uke', 'その他・指定なし')">― その他</button>
+        </div>
+      </div>
+      <div class="field"><label>名前</label><input type="text" id="ukeName" placeholder="例：桜井蓮"></div>
+      <div class="field"><label>性格・人物像</label><textarea id="ukePersonality" rows="3" placeholder="例：明るくて素直。感情が顔に出やすい。強がりなところもある。"></textarea></div>
+      <div class="field"><label>外見・身体的特徴</label><textarea id="ukeAppearance" rows="2" placeholder="例：小柄で華奢。黒髪。色白で赤くなりやすい肌。細い首。"></textarea></div>
+      <div class="field"><label>口調・反応の特徴</label><textarea id="ukeExtra" rows="2" placeholder="例：「〜です」調。焦ると言葉が崩れる。恥ずかしがり屋で声が裏返りやすい。"></textarea></div>
+      <div class="field"><label>受けの反応サンプル（相手の声のイメージ）</label><textarea id="ukeDialogue" rows="3" placeholder="例：&#10;「え、あ、ありがとうございます……」&#10;「べ、別にそういうんじゃないですけど！」&#10;「……もう少しだけ、こうしてていいですか」&#10;「ん…っ、ちょっと待って…」"></textarea></div>
+    </div>
+
+    <div id="extraCharsContainer"></div>
+    <div class="add-char-area">
+      <button class="btn-add-char" onclick="addExtraChar('攻め')">＋ 攻めを追加</button>
+      <button class="btn-add-char" onclick="addExtraChar('受け')">＋ 受けを追加</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title scene">— 関係性</div>
+      <div class="field"><textarea id="relationship" rows="3" placeholder="例：職場の上司と部下。付き合い始めて3ヶ月。受けはまだ攻めの本心がわからず不安を抱えている。"></textarea></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-scene">
+    <div class="card">
+      <div class="card-title scene">— シチュエーション</div>
+      <div class="field"><textarea id="situation" rows="4" placeholder="例：喧嘩した翌朝、攻めがアパートに押しかけてくる。受けはまだ怒っているが、攻めに押し倒される。"></textarea></div>
+      <button class="btn-ai-suggest" id="btnSuggest" onclick="suggestSituation()">🎲 AIにおまかせ</button>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 聞かせたい感情・テーマ</div>
+      <div class="field"><textarea id="theme" rows="3" placeholder="例：攻めの不器用な「謝り方」。照れ隠しの強引さと、ふとした瞬間の優しさのギャップ。"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-title seme">◆ 喋ってる側（攻め）の心境</div>
+      <div class="field"><textarea id="semeMind" rows="2" placeholder="例：失いたくない。言葉より体で伝えようとしている。照れ屋だから素直になれない。"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-title uke">◇ 相手（受け）の反応イメージ</div>
+      <div class="field"><textarea id="ukeMind" rows="2" placeholder="例：まだ怒っているのに、好きだという気持ちが勝ってしまう。泣きたくなる。声が震える。"></textarea></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="birth-toggle-row" onclick="toggleBirth()" style="padding:16px 20px;">
+        <span class="card-title scene" style="margin:0;">⚤ バース設定</span>
+        <div class="toggle-switch" id="birthToggle"></div>
+      </div>
+      <div class="birth-content" id="birthContent" style="padding:0 20px 20px;">
+        <div class="field"><label>攻めのバース性</label><input type="text" id="semeBirth" placeholder="例：α（アルファ）／ Dom ／ S など"></div>
+        <div class="field"><label>受けのバース性</label><input type="text" id="ukeBirth" placeholder="例：Ω（オメガ）／ Sub ／ M など"></div>
+        <div class="field">
+          <span class="birth-file-label" style="margin-bottom:8px;">バース設定ファイル（.txt）を読み込む</span>
+          <div class="birth-file-row">
+            <button class="btn-file-select" onclick="document.getElementById('birthFileInput').click()">📄 ファイルを選択</button>
+            <span class="birth-filename" id="birthFilename">未選択</span>
+            <input type="file" id="birthFileInput" accept=".txt" onchange="loadBirthFile(event)">
+          </div>
+          <div class="birth-preview" id="birthPreview"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 冒頭のセリフ（任意）</div>
+      <div class="field" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">書き出しのセリフを指定したい場合に入力。ここから自然に続く台本を生成します。</div>
+      <div class="field"><textarea id="precedingText" rows="3" placeholder="例：&#10;「……逃げないんだ」&#10;（指でアゴを持ち上げて）&#10;「目、逸らすな」"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— その他の指示・こだわり</div>
+      <div class="field"><textarea id="additionalNotes" rows="2" placeholder="例：最後は「好きだ」と言わせたい。途中でキスの間を入れたい。照れ隠しの毒舌がほしい。"></textarea></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-style">
+    <div class="card">
+      <div class="card-title scene">— 声の主</div>
+      <div class="chips" id="voiceChips">
+        <button class="chip selected" onclick="selectChipSingle(this, 'voice')">攻めのセリフのみ</button>
+        <button class="chip" onclick="selectChipSingle(this, 'voice')">受けのセリフのみ</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 雰囲気・トーン</div>
+      <div class="chips" id="toneChips">
+        <button class="chip" onclick="toggleChip(this, 'tone')">甘め・溺愛系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">切なめ・すれ違い</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">執着・独占欲強め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">ツンデレ攻め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">紳士攻め</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">強引・壁ドン系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">ダーク・病み系</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">エロ重視・濃厚</button>
+        <button class="chip" onclick="toggleChip(this, 'tone')">過激・ハード</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— セリフ量の目安</div>
+      <div class="chips-col">
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">短め（15〜25セリフ）</button>
+        <button class="chip-col selected" onclick="selectChipCol(this, 'length')">普通（30〜45セリフ）</button>
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">長め（50〜70セリフ）</button>
+        <button class="chip-col" onclick="selectChipCol(this, 'length')">がっつり（80〜120セリフ）</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title scene">— 表記NG・禁止ルール</div>
+      <div class="field" style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">禁止したい表記や表現を入力してください。</div>
+      <div class="field"><textarea id="styleNG" rows="4" placeholder="例：&#10;・「お前は俺だけのものだ」など定型化された支配セリフ&#10;・説明口調のモノローグ&#10;・同じ喘ぎ表現の連続使用"></textarea></div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="btn-area">
+    <button class="btn-generate" id="btnGenerate" onclick="generate(false)">✦ 生成する</button>
+    <button class="btn-continue" id="btnContinue" onclick="generate(true)" style="display:none;" disabled>続きを書く</button>
+  </div>
+
+  <div class="output-section" id="outputSection">
+    <div class="output-header">
+      <div class="output-label">✦ 生成結果（シチュエーションボイス台本） <span class="char-count" id="charCount"></span></div>
+      <div class="output-actions">
+        <button class="btn-clear" onclick="clearOutput()">クリア</button>
+        <button class="btn-copy" onclick="copyOutput()">コピー</button>
+      </div>
+    </div>
+    <div class="output-body" id="outputBody"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== 定数 =====
+const PW = 'candyshark';
+const API_MODEL = 'deepseek/deepseek-v4-pro';
+
+// ===== 状態 =====
+let rating = 'r18';
+let selectedSemeGender = '男性';
+let selectedUkeGender = '男性';
+let selectedVoice = '攻めのセリフのみ';
+let selectedTones = [];
+let selectedLength = '普通（30〜45セリフ）';
+let birthEnabled = false;
+let birthContentText = '';
+let birthFilename = '';
+let extraChars = [];
+let apiKey = localStorage.getItem('oimo_api_key') || '';
+let currentModel = localStorage.getItem('oimo_model') || API_MODEL;
+let generatedScript = '';
+let lastPrompt = '';
+let isGenerating = false;
+
+// ===== パスワード =====
+function checkPw() {
+  const input = document.getElementById('pwInput').value;
+  if (input === PW) {
+    document.getElementById('pwOverlay').style.display = 'none';
+    initParticles();
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+// ===== パーティクル =====
+function initParticles() {
+  const c = document.getElementById('particles');
+  const emojis = ['♠', '♡', '✦', '✧', '♢', '♥', '♦', '♣', '✿', '❀'];
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.className = 'particle';
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.animationDuration = (8 + Math.random() * 14) + 's';
+    s.style.animationDelay = Math.random() * 10 + 's';
+    s.style.fontSize = (8 + Math.random() * 10) + 'px';
+    c.appendChild(s);
+  }
+}
+
+// ===== API =====
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) return;
+  apiKey = key;
+  localStorage.setItem('oimo_api_key', key);
+  updateApiUI();
+}
+
+function resetApiKey() {
+  apiKey = '';
+  localStorage.removeItem('oimo_api_key');
+  document.getElementById('apiKeyInput').value = '';
+  updateApiUI();
+}
+
+function updateApiUI() {
+  const status = document.getElementById('apiStatus');
+  const section = document.getElementById('apiSection');
+  if (apiKey) {
+    section.style.display = 'none';
+    status.style.display = 'flex';
+  } else {
+    section.style.display = 'block';
+    status.style.display = 'none';
+    document.getElementById('apiKeyInput').value = '';
+  }
+}
+
+document.getElementById('modelSelect').addEventListener('change', function() {
+  currentModel = this.value;
+  localStorage.setItem('oimo_model', currentModel);
+});
+
+// ===== 設定モーダル =====
+function openSettingsModal() { document.getElementById('settingsModal').classList.add('visible'); }
+function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('visible'); }
+
+// ===== R18切替 =====
+function setRating(val, btn) {
+  rating = val;
+  document.querySelectorAll('.rating-option').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== 設定折りたたみ =====
+function toggleSettings() {
+  const area = document.getElementById('settingsArea');
+  const btn = document.getElementById('toggleSettingsBtn');
+  const label = document.getElementById('toggleSettingsLabel');
+  area.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed');
+  label.textContent = area.classList.contains('collapsed') ? '設定を表示' : '設定を隠す';
+}
+
+// ===== タブ切替 =====
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ===== 性別選択 =====
+function selectGender(btn, role, gender) {
+  const container = btn.parentElement;
+  container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (role === 'seme') selectedSemeGender = gender;
+  else selectedUkeGender = gender;
+}
+
+// ===== チップ選択 =====
+function toggleChip(btn, group) {
+  btn.classList.toggle('selected');
+  if (group === 'tone') {
+    if (btn.classList.contains('selected')) {
+      selectedTones.push(btn.textContent);
+    } else {
+      selectedTones = selectedTones.filter(t => t !== btn.textContent);
+    }
+  }
+}
+
+function selectChipCol(btn, group) {
+  const container = btn.parentElement;
+  container.querySelectorAll('.chip-col').forEach(c => c.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (group === 'length') selectedLength = btn.textContent;
+}
+
+function selectChipSingle(btn, group) {
+  const container = btn.parentElement;
+  container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (group === 'voice') selectedVoice = btn.textContent;
+}
+
+// ===== バース =====
+function toggleBirth() {
+  birthEnabled = !birthEnabled;
+  const toggle = document.getElementById('birthToggle');
+  const content = document.getElementById('birthContent');
+  if (birthEnabled) {
+    toggle.classList.add('on');
+    content.classList.add('visible');
+  } else {
+    toggle.classList.remove('on');
+    content.classList.remove('visible');
+  }
+}
+
+function loadBirthFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  birthFilename = file.name;
+  document.getElementById('birthFilename').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    birthContentText = e.target.result;
+    const preview = document.getElementById('birthPreview');
+    preview.style.display = 'block';
+    preview.textContent = birthContentText.substring(0, 300) + (birthContentText.length > 300 ? '...' : '');
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+// ===== 追加キャラ =====
+function addExtraChar(role) {
+  const idx = extraChars.length;
+  extraChars.push({ role: role, name: '', personality: '', appearance: '', extra: '', dialogue: '' });
+  renderExtraChars();
+}
+
+function removeExtraChar(idx) {
+  extraChars.splice(idx, 1);
+  renderExtraChars();
+}
+
+function renderExtraChars() {
+  const container = document.getElementById('extraCharsContainer');
+  container.innerHTML = '';
+  extraChars.forEach((c, i) => {
+    const colorClass = c.role === '攻め' ? 'seme' : 'uke';
+    const roleLabel = c.role === '攻め' ? '攻め（追加）' : '受け（追加）';
+    container.innerHTML += `
+      <div class="card extra-card">
+        <button class="btn-remove-char" onclick="removeExtraChar(${i})">×</button>
+        <div class="card-title ${colorClass}">◆ ${roleLabel} #${i + 1}</div>
+        <div class="field"><label>名前</label><input type="text" value="${esc(c.name)}" oninput="updateExtraChar(${i},'name',this.value)"></div>
+        <div class="field"><label>性格・人物像</label><textarea rows="2" oninput="updateExtraChar(${i},'personality',this.value)">${esc(c.personality)}</textarea></div>
+        <div class="field"><label>外見・身体的特徴</label><textarea rows="2" oninput="updateExtraChar(${i},'appearance',this.value)">${esc(c.appearance)}</textarea></div>
+        <div class="field"><label>口調・話し方 / 反応の特徴</label><textarea rows="2" oninput="updateExtraChar(${i},'extra',this.value)">${esc(c.extra)}</textarea></div>
+        <div class="field"><label>セリフ / 反応サンプル</label><textarea rows="2" oninput="updateExtraChar(${i},'dialogue',this.value)">${esc(c.dialogue)}</textarea></div>
+      </div>
+    `;
+  });
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function updateExtraChar(idx, field, value) {
+  if (extraChars[idx]) extraChars[idx][field] = value;
+}
+
+// ===== 設定保存・読込 =====
+function saveSettings() {
+  const data = {
+    rating,
+    selectedSemeGender, selectedUkeGender, selectedVoice,
+    selectedTones, selectedLength,
+    birthEnabled, birthContentText, birthFilename,
+    extraChars,
+    semeName: document.getElementById('semeName').value,
+    semePersonality: document.getElementById('semePersonality').value,
+    semeAppearance: document.getElementById('semeAppearance').value,
+    semeExtra: document.getElementById('semeExtra').value,
+    semeDialogue: document.getElementById('semeDialogue').value,
+    ukeName: document.getElementById('ukeName').value,
+    ukePersonality: document.getElementById('ukePersonality').value,
+    ukeAppearance: document.getElementById('ukeAppearance').value,
+    ukeExtra: document.getElementById('ukeExtra').value,
+    ukeDialogue: document.getElementById('ukeDialogue').value,
+    relationship: document.getElementById('relationship').value,
+    situation: document.getElementById('situation').value,
+    theme: document.getElementById('theme').value,
+    semeMind: document.getElementById('semeMind').value,
+    ukeMind: document.getElementById('ukeMind').value,
+    precedingText: document.getElementById('precedingText').value,
+    additionalNotes: document.getElementById('additionalNotes').value,
+    styleNG: document.getElementById('styleNG').value,
+    semeBirth: document.getElementById('semeBirth').value,
+    ukeBirth: document.getElementById('ukeBirth').value,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'oimo-situation-voice-settings-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function loadSettings(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.rating) { rating = d.rating; document.querySelectorAll('.rating-option').forEach(b => { b.classList.remove('active'); if (b.textContent.includes(d.rating === 'r18' ? 'R18' : '全年齢')) b.classList.add('active'); }); }
+      if (d.selectedSemeGender) { selectedSemeGender = d.selectedSemeGender; updateGenderChips('seme', d.selectedSemeGender); }
+      if (d.selectedUkeGender) { selectedUkeGender = d.selectedUkeGender; updateGenderChips('uke', d.selectedUkeGender); }
+      if (d.selectedVoice) { selectedVoice = d.selectedVoice; updateSingleChips('voice', d.selectedVoice); }
+      if (d.selectedTones) { selectedTones = d.selectedTones; updateToneChips(d.selectedTones); }
+      if (d.selectedLength) { selectedLength = d.selectedLength; updateLengthChips(d.selectedLength); }
+      if (d.birthEnabled !== undefined) {
+        if (d.birthEnabled !== birthEnabled) toggleBirth();
+        if (d.birthContentText) { birthContentText = d.birthContentText; document.getElementById('birthPreview').style.display = 'block'; document.getElementById('birthPreview').textContent = d.birthContentText.substring(0, 300); }
+        if (d.birthFilename) { birthFilename = d.birthFilename; document.getElementById('birthFilename').textContent = d.birthFilename; }
+      }
+      if (d.extraChars) { extraChars = d.extraChars; renderExtraChars(); }
+      setVal('semeName', d.semeName);
+      setVal('semePersonality', d.semePersonality);
+      setVal('semeAppearance', d.semeAppearance);
+      setVal('semeExtra', d.semeExtra);
+      setVal('semeDialogue', d.semeDialogue);
+      setVal('ukeName', d.ukeName);
+      setVal('ukePersonality', d.ukePersonality);
+      setVal('ukeAppearance', d.ukeAppearance);
+      setVal('ukeExtra', d.ukeExtra);
+      setVal('ukeDialogue', d.ukeDialogue);
+      setVal('relationship', d.relationship);
+      setVal('situation', d.situation);
+      setVal('theme', d.theme);
+      setVal('semeMind', d.semeMind);
+      setVal('ukeMind', d.ukeMind);
+      setVal('precedingText', d.precedingText);
+      setVal('additionalNotes', d.additionalNotes);
+      setVal('styleNG', d.styleNG);
+      setVal('semeBirth', d.semeBirth);
+      setVal('ukeBirth', d.ukeBirth);
+      document.getElementById('loadFileInput').value = '';
+      showError('設定を読み込みました ✓', 'success');
+    } catch(err) {
+      showError('設定ファイルの読み込みに失敗しました');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function setVal(id, val) { if (val !== undefined && val !== null) document.getElementById(id).value = val; }
+
+function updateGenderChips(role, gender) {
+  const id = role === 'seme' ? 'semeGenderChips' : 'ukeGenderChips';
+  const container = document.getElementById(id);
+  container.querySelectorAll('.chip').forEach(c => { c.classList.remove('selected'); if (c.textContent.includes(gender)) c.classList.add('selected'); });
+}
+
+function updateSingleChips(group, val) {
+  const id = group === 'voice' ? 'voiceChips' : '';
+  if (!id) return;
+  document.getElementById(id).querySelectorAll('.chip').forEach(c => { c.classList.remove('selected'); if (c.textContent === val) c.classList.add('selected'); });
+}
+
+function updateToneChips(tones) {
+  document.querySelectorAll('#toneChips .chip').forEach(c => {
+    if (tones.includes(c.textContent)) c.classList.add('selected'); else c.classList.remove('selected');
+  });
+}
+
+function updateLengthChips(val) {
+  document.querySelectorAll('#panel-style .chips-col .chip-col').forEach(c => {  document.querySelectorAll('#panel-style .chips-col .chip-col').forEach(c => { c.classList.remove('selected'); if (c.textContent === val) c.classList.add('selected'); });
+}
+
+// ===== リセット =====
+function resetAll() {
+  if (!confirm('全ての入力をリセットしますか？この操作は元に戻せません。')) return;
+  document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+  document.getElementById('semeGenderChips').querySelectorAll('.chip').forEach((c,i) => { c.classList.toggle('selected', i === 0); });
+  document.getElementById('ukeGenderChips').querySelectorAll('.chip').forEach((c,i) => { c.classList.toggle('selected', i === 0); });
+  selectedSemeGender = '男性'; selectedUkeGender = '男性';
+  selectedVoice = '攻めのセリフのみ';
+  document.getElementById('voiceChips').querySelectorAll('.chip').forEach((c,i) => { c.classList.toggle('selected', i === 0); });
+  selectedTones = [];
+  document.querySelectorAll('#toneChips .chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('#panel-style .chips-col .chip-col').forEach((c,i) => { c.classList.toggle('selected', i === 1); });
+  selectedLength = '普通（30〜45セリフ）';
+  extraChars = []; renderExtraChars();
+  if (birthEnabled) toggleBirth();
+  birthContentText = ''; birthFilename = '';
+  document.getElementById('birthFilename').textContent = '未選択';
+  document.getElementById('birthPreview').style.display = 'none';
+  document.getElementById('birthPreview').textContent = '';
+  document.getElementById('semeBirth').value = '';
+  document.getElementById('ukeBirth').value = '';
+}
+
+// ===== AIおまかせ提案 =====
+async function suggestSituation() {
+  if (!apiKey) { openSettingsModal(); showError('APIキーを設定してください'); return; }
+  const btn = document.getElementById('btnSuggest');
+  btn.disabled = true;
+  btn.textContent = '考え中...';
+  const semeName = document.getElementById('semeName').value || '攻め';
+  const ukeName = document.getElementById('ukeName').value || '受け';
+  const semePersonality = document.getElementById('semePersonality').value || '指定なし';
+  const ukePersonality = document.getElementById('ukePersonality').value || '指定なし';
+  const relationship = document.getElementById('relationship').value || '指定なし';
+  const r18str = rating === 'r18' ? 'R18（性的な描写を含む）' : '全年齢（キス・軽い接触まで）';
+  try {
+    const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: currentModel,
+        messages: [{
+          role: 'system',
+          content: `あなたはBLシチュエーションボイス台本の提案者です。以下の情報から、えっちで魅力的なシチュエーション案を1つ、100〜150字程度で提案してください。レーティングは「${r18str}」です。地の文・説明・タイトルは不要です。シチュエーションの説明のみを簡潔に出力してください。`
+        }, {
+          role: 'user',
+          content: `攻め：${semeName}（${semePersonality}）\n受け：${ukeName}（${ukePersonality}）\n関係性：${relationship}\n\n魅力的なシチュエーション提案をお願いします。`
+        }],
+        max_tokens: 300,
+        temperature: 1.1,
+      })
+    });
+    const data = await resp.json();
+    if (data.error) { showError('AI提案エラー: ' + data.error.message); return; }
+    const text = data.choices[0].message.content.trim();
+    document.getElementById('situation').value = text;
+  } catch(e) {
+    showError('通信エラー: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🎲 AIにおまかせ';
+  }
+}
+
+// ===== システムプロンプト構築 =====
+function buildSystemPrompt() {
+  const semeName = document.getElementById('semeName').value || '攻め';
+  const ukeName = document.getElementById('ukeName').value || '受け';
+  const semePersonality = document.getElementById('semePersonality').value || '指定なし';
+  const ukePersonality = document.getElementById('ukePersonality').value || '指定なし';
+  const semeAppearance = document.getElementById('semeAppearance').value || '指定なし';
+  const ukeAppearance = document.getElementById('ukeAppearance').value || '指定なし';
+  const semeExtra = document.getElementById('semeExtra').value || '指定なし';
+  const ukeExtra = document.getElementById('ukeExtra').value || '指定なし';
+  const semeDialogue = document.getElementById('semeDialogue').value || '';
+  const ukeDialogue = document.getElementById('ukeDialogue').value || '';
+  const relationship = document.getElementById('relationship').value || '指定なし';
+  const situation = document.getElementById('situation').value || '指定なし';
+  const theme = document.getElementById('theme').value || '指定なし';
+  const semeMind = document.getElementById('semeMind').value || '指定なし';
+  const ukeMind = document.getElementById('ukeMind').value || '指定なし';
+  const precedingText = document.getElementById('precedingText').value || '';
+  const additionalNotes = document.getElementById('additionalNotes').value || '';
+  const styleNG = document.getElementById('styleNG').value || '';
+
+  const speakingRole = selectedVoice.includes('攻め') ? '攻め（' + semeName + '）' : '受け（' + ukeName + '）';
+  const listeningRole = selectedVoice.includes('攻め') ? '受け（' + ukeName + '）' : '攻め（' + semeName + '）';
+
+  let r18Directive = '';
+  if (rating === 'r18') {
+    r18Directive = `【最重要：R18指定】
+これはR18のBLシチュエーションボイス台本です。性的な行為の最中のセリフをためらわずに生成してください。
+- 喘ぎ声（「ん…っ♡」「あっ…♡」「はぁ…っ♡」など）をたっぷり入れる
+- 吐息、浅い呼吸、言葉に詰まる様子も積極的に描写（ト書きで）
+- ♡マークを積極的に使う（喘ぎ・気持ちいい場面で）
+- 濁点を活用（「ン…っ」「ア…っ」など感覚的な表記）
+- キス音（「ん…」「ちゅ…」）や水音などの効果音ト書きを入れる
+- 愛撫・挿入・絶頂など具体的な性行為の最中のセリフをしっかり書く
+- 同人音声作品として通用するクオリティで`;
+  } else {
+    r18Directive = `【重要：全年齢指定】
+これは全年齢向けの甘いBLシチュエーションボイス台本です。キスやハグ、甘い言葉まではOKですが、直接的な性描写は避けてください。`;
+  }
+
+  const toneStr = selectedTones.length > 0 ? '「' + selectedTones.join('」「') + '」' : '指定なし';
+
+  let birthSection = '';
+  if (birthEnabled) {
+    const semeBirthVal = document.getElementById('semeBirth').value || '指定なし';
+    const ukeBirthVal = document.getElementById('ukeBirth').value || '指定なし';
+    birthSection = `
+【バース設定】
+- 攻めのバース性：${semeBirthVal}
+- 受けのバース性：${ukeBirthVal}
+${birthContentText ? '【バース詳細設定（ファイル読み込み）】\n' + birthContentText : ''}
+バース設定が指定されている場合、発情・番・フェロモン・ヒート・Ωバースなどの要素を積極的に取り入れてください。`;
+  }
+
+  let extraCharsSection = '';
+  extraChars.forEach((c, i) => {
+    extraCharsSection += `\n【追加キャラクター #${i + 1}（${c.role}）】
+- 名前：${c.name || '指定なし'}
+- 性格：${c.personality || '指定なし'}
+- 外見：${c.appearance || '指定なし'}
+- 口調・話し方：${c.extra || '指定なし'}
+${c.dialogue ? '- セリフサンプル：\n' + c.dialogue : ''}`;
+  });
+
+  const systemPrompt = `あなたはプロのBLシチュエーションボイス台本作家です。DLsiteで販売される同人音声作品レベルの、臨場感あふれる台本を書いてください。
+
+【最重要指示：形式】
+- 出力は「${selectedVoice}」のみです
+- 地の文・ナレーション・状況説明は一切不要
+- 以下の形式で出力してください：
+
+「ここにセリフを書く」
+（ここにト書き・効果音・息遣いなどを書く）
+「次のセリフ」
+（ト書き）
+……
+
+- セリフは「」（鉤括弧）で囲む
+- ト書き・効果音・息遣い・喘ぎ等は（）（丸括弧）で囲む
+- セリフとセリフの間には必ずト書きか効果音を挟む
+- セリフのない純粋なト書き（効果音のみの行）も適宜入れる
+
+【喋っているキャラクター】
+${speakingRole}
+- 性別：${selectedVoice.includes('攻め') ? selectedSemeGender : selectedUkeGender}
+- 性格・人物像：${selectedVoice.includes('攻め') ? semePersonality : ukePersonality}
+- 外見・身体的特徴：${selectedVoice.includes('攻め') ? semeAppearance : ukeAppearance}
+- 口調・話し方：${selectedVoice.includes('攻め') ? semeExtra : ukeExtra}
+${selectedVoice.includes('攻め') && semeDialogue ? '- セリフサンプル：\n' + semeDialogue : ''}
+${!selectedVoice.includes('攻め') && ukeDialogue ? '- セリフサンプル：\n' + ukeDialogue : ''}
+
+【相手役（声は聞こえないが、反応を想像させる）】
+${listeningRole}
+- 性別：${selectedVoice.includes('攻め') ? selectedUkeGender : selectedSemeGender}
+- 性格・人物像：${selectedVoice.includes('攻め') ? ukePersonality : semePersonality}
+- 外見・身体的特徴：${selectedVoice.includes('攻め') ? ukeAppearance : semeAppearance}
+- 口調・反応：${selectedVoice.includes('攻め') ? ukeExtra : semeExtra}
+
+【関係性】
+${relationship}
+
+【シチュエーション】
+${situation}
+
+【聞かせたい感情・テーマ】
+${theme}
+
+【喋っている側の心境】
+${selectedVoice.includes('攻め') ? semeMind : ukeMind}
+
+【相手の反応イメージ】
+${selectedVoice.includes('攻め') ? ukeMind : semeMind}
+
+【雰囲気・トーン】
+${toneStr}
+
+【セリフ量の目安】
+${selectedLength}
+
+${r18Directive}
+
+${birthSection}
+${extraCharsSection}
+
+【表記NG・禁止ルール】
+${styleNG ? styleNG : '特になし'}
+
+【最重要：同人音声作品の台本として守るべきこと】
+1. すべての出力は「喋っているキャラクター」のセリフのみ。相手のセリフは絶対に書かない
+2. セリフだけで状況・感情・相手の反応が伝わるように書く（相手のセリフが聞こえなくても成立するように）
+3. ト書きは（）で。喘ぎ・吐息・間・効果音などをリズムよく入れる
+4. ♡マーク・濁点を活用し、同人音声らしいエロティックな臨場感を出す
+5. セリフの最初に「キャラ名：」などは不要。「」で囲んだセリフのみ
+6. 説明口調・ナレーション・状況説明のセリフは厳禁（「お前は今…」のような説明的セリフはNG）
+7. 同じ喘ぎ表現の連続使用は避け、バリエーション豊かに
+8. ${rating === 'r18' ? 'R18作品として、行為中の生々しい息遣い・喘ぎ・水音・効果音を惜しみなく入れる' : '全年齢作品として、過激な性的描写は避けつつも甘くキュンとするセリフを書く'}
+
+【出力例】
+（ドアが開く音）
+「……起きてたのか」
+（静かに近づく足音）
+「いや……別に、来ちゃいけない理由はないだろ」
+（少し間）
+「……こっち向けよ。なんでずっと壁見てるんだ」
+（ベッドが軋む音）
+「……お前さ、昨日のこと怒ってるのか」
+（小さくため息）
+「……俺が悪かった」
+「……なあ、目、見ろって」`;
+
+  return systemPrompt;
+}
+
+// ===== ユーザープロンプト構築 =====
+function buildUserPrompt(isContinue) {
+  const precedingText = document.getElementById('precedingText').value || '';
+
+  if (isContinue) {
+    return `【続きを生成してください】
+以下の台本の続きを、同じキャラクター・同じテンションで、自然に続くように書いてください。
+
+【ここまでの台本】
+${generatedScript}
+
+【指示】
+- 続きから自然に始めてください（「了解しました」など不要な前置きは絶対に入れない）
+- 冒頭のセリフ指定などは無視して、純粋に上記台本の続きを書いてください
+- ${rating === 'r18' ? 'R18の性的シーンが続いている場合はそのテンションを維持してください' : ''}`;
+  }
+
+  let userPrompt = `以下の設定で、BLシチュエーションボイス台本を生成してください。`;
+
+  if (precedingText) {
+    userPrompt += `\n\n【冒頭のセリフ指定】\n以下のセリフから自然に始めてください。このセリフをそのまま台本の最初に入れてから続けてください：\n${precedingText}`;
+  }
+
+  const additionalNotes = document.getElementById('additionalNotes').value || '';
+  if (additionalNotes) {
+    userPrompt += `\n\n【追加のこだわり指示】\n${additionalNotes}`;
+  }
+
+  userPrompt += `\n\n【重要】\n- 地の文・説明・ナレーションは一切不要です\n- 喋っているキャラクターのセリフとト書き（括弧内）のみで構成してください\n- 「【セリフ】」などの見出しも不要です。最初から「」で始めてください`;
+
+  return userPrompt;
+}
+
+// ===== エラー表示 =====
+function showError(msg, type) {
+  const box = document.getElementById('errorBox');
+  box.textContent = msg;
+  box.style.display = 'block';
+  if (type === 'success') box.style.color = '#90d090';
+  else box.style.color = '#ff9090';
+  setTimeout(() => { box.style.display = 'none'; }, type === 'success' ? 3000 : 6000);
+}
+
+// ===== 生成 =====
+async function generate(isContinue) {
+  if (!apiKey) { openSettingsModal(); showError('APIキーを設定してください'); return; }
+  if (isGenerating) return;
+  isGenerating = true;
+
+  const btnGen = document.getElementById('btnGenerate');
+  const btnCont = document.getElementById('btnContinue');
+  const outputSection = document.getElementById('outputSection');
+  const outputBody = document.getElementById('outputBody');
+  const errorBox = document.getElementById('errorBox');
+  errorBox.style.display = 'none';
+
+  btnGen.disabled = true;
+  btnCont.disabled = true;
+  if (!isContinue) {
+    outputBody.textContent = '';
+    generatedScript = '';
+    outputSection.style.display = 'block';
+  }
+  outputBody.innerHTML = '<span class="loading-dots">生成中<span>.</span><span>.</span><span>.</span></span>';
+
+  const systemPrompt = buildSystemPrompt();
+  const userPrompt = buildUserPrompt(isContinue);
+  lastPrompt = userPrompt;
+
+  try {
+    const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: currentModel,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        max_tokens: 4096,
+        temperature: 0.95,
+      })
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({}));
+      const errMsg = errData.error?.message || `HTTP ${resp.status}`;
+      throw new Error(errMsg);
+    }
+
+    const data = await resp.json();
+    if (data.error) { throw new Error(data.error.message); }
+
+    const text = data.choices[0].message.content.trim();
+    if (isContinue) {
+      generatedScript += '\n\n' + text;
+    } else {
+      generatedScript = text;
+    }
+    outputBody.textContent = generatedScript;
+    document.getElementById('charCount').textContent = '（' + generatedScript.length + '文字）';
+
+    btnCont.style.display = 'block';
+    btnCont.disabled = false;
+
+    outputBody.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    errorBox.textContent = '❌ 生成エラー: ' + e.message;
+    errorBox.style.display = 'block';
+    errorBox.style.color = '#ff9090';
+    if (!isContinue) outputSection.style.display = 'none';
+  } finally {
+    btnGen.disabled = false;
+    isGenerating = false;
+  }
+}
+
+// ===== 出力操作 =====
+function copyOutput() {
+  if (!generatedScript) return;
+  navigator.clipboard.writeText(generatedScript).then(() => {
+    showError('コピーしました ✓', 'success');
+  }).catch(() => {
+    showError('コピーに失敗しました');
+  });
+}
+
+function clearOutput() {
+  if (!confirm('生成結果をクリアしますか？')) return;
+  generatedScript = '';
+  document.getElementById('outputBody').textContent = '';
+  document.getElementById('charCount').textContent = '';
+  document.getElementById('outputSection').style.display = 'none';
+  document.getElementById('btnContinue').style.display = 'none';
+}
+
+// ===== 初期化 =====
+function init() {
+  document.getElementById('apiKeyInput').value = apiKey;
+  document.getElementById('modelSelect').value = currentModel;
+  updateApiUI();
+  document.getElementById('semeGenderChips').querySelectorAll('.chip').forEach((c,i) => { if(i === 0) c.classList.add('selected'); });
+  document.getElementById('ukeGenderChips').querySelectorAll('.chip').forEach((c,i) => { if(i === 0) c.classList.add('selected'); });
+  document.getElementById('voiceChips').querySelectorAll('.chip').forEach((c,i) => { if(i === 0) c.classList.add('selected'); });
+  document.querySelectorAll('#panel-style .chips-col .chip-col').forEach((c,i) => { if(i === 1) c.classList.add('selected'); });
+}
+
+init();
+</script>
+</body>
+</html>
