@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文箱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1b1726;
+    --bg-deep: #14111d;
+    --paper: #faf4e9;
+    --paper-shadow: #e8dcc6;
+    --ink: #2c2433;
+    --ink-soft: #6b5f74;
+    --rose: #b6455c;
+    --rose-soft: #d98aa0;
+    --gold: #c9a15a;
+    --lavender: #8b7f95;
+    --line: rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  #root{
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    background:
+      radial-gradient(ellipse at 20% -10%, #2a2138 0%, transparent 55%),
+      var(--bg);
+    color:var(--paper);
+    min-height:100vh;
+    padding:0;
+  }
+  .header{
+    display:flex; flex-direction:column; gap:14px;
+    padding:32px 28px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .title-row{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; justify-content:space-between;}
+  .title-block h1{
+    font-family:'Shippori Mincho', serif;
+    font-weight:700;
+    font-size:28px;
+    margin:0;
+    letter-spacing:.08em;
+    background:linear-gradient(90deg, var(--gold), var(--rose-soft));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .title-block p{
+    margin:4px 0 0;
+    font-size:12.5px;
+    color:var(--lavender);
+    letter-spacing:.04em;
+  }
+  .add-btn{
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    background:var(--rose);
+    color:#fff6f2;
+    border:none;
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(182,69,92,0.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+    white-space:nowrap;
+  }
+  .add-btn:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(182,69,92,0.45);}
+  .search-row{display:flex; gap:10px;}
+  .search-input{
+    flex:1;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    color:var(--paper);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-size:13.5px;
+    outline:none;
+  }
+  .search-input::placeholder{color:var(--lavender);}
+  .search-input:focus{border-color:var(--gold);}
+
+  .layout{
+    display:flex;
+    align-items:flex-start;
+    gap:0;
+  }
+  .sidebar{
+    width:190px;
+    flex-shrink:0;
+    padding:22px 12px 40px 24px;
+    position:sticky;
+    top:0;
+  }
+  .sidebar-label{
+    font-size:11px;
+    color:var(--lavender);
+    letter-spacing:.12em;
+    margin:0 0 10px 4px;
+  }
+  .spine{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    width:100%;
+    background:none;
+    border:none;
+    text-align:left;
+    padding:9px 10px;
+    border-radius:0 8px 8px 0;
+    cursor:pointer;
+    color:var(--paper);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-size:13px;
+    margin-bottom:3px;
+    border-left:4px solid transparent;
+    transition:background .12s ease, border-color .12s ease;
+  }
+  .spine:hover{background:rgba(255,255,255,0.05);}
+  .spine.active{background:rgba(255,255,255,0.08); border-left-color:var(--gold);}
+  .spine .count{margin-left:auto; font-size:11px; color:var(--lavender);}
+  .dot{width:9px; height:9px; border-radius:3px; flex-shrink:0;}
+
+  .main{
+    flex:1;
+    min-width:0;
+    padding:22px 28px 60px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:18px;
+  }
+  .card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:3px 10px 10px 3px;
+    padding:18px 18px 16px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:0 8px 18px rgba(0,0,0,0.28), inset 3px 0 0 var(--rose-soft);
+    transition:transform .15s ease, box-shadow .15s ease;
+    display:flex;
+    flex-direction:column;
+    min-height:150px;
+  }
+  .card:hover{transform:translateY(-3px) rotate(-0.2deg); box-shadow:0 12px 24px rgba(0,0,0,0.35), inset 3px 0 0 var(--gold);}
+  .card h3{
+    font-family:'Shippori Mincho', serif;
+    font-size:16.5px;
+    margin:0 0 8px;
+    line-height:1.4;
+  }
+  .card .excerpt{
+    font-size:12.5px;
+    line-height:1.75;
+    color:var(--ink-soft);
+    flex:1;
+    display:-webkit-box;
+    -webkit-line-clamp:4;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card .meta{
+    display:flex; flex-wrap:wrap; gap:5px; margin-top:12px;
+  }
+  .chip{
+    font-size:10.5px;
+    padding:3px 9px;
+    border-radius:999px;
+    background:rgba(182,69,92,0.1);
+    color:var(--rose);
+    border:1px solid rgba(182,69,92,0.25);
+  }
+  .card .date{
+    position:absolute; top:14px; right:16px;
+    font-size:10px; color:var(--lavender);
+  }
+
+  .empty{
+    text-align:center;
+    padding:80px 20px;
+    color:var(--lavender);
+  }
+  .empty .mark{font-family:'Shippori Mincho', serif; font-size:22px; color:var(--paper); margin-bottom:10px; display:block;}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(10,8,16,0.72);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; z-index:50; backdrop-filter:blur(2px);
+  }
+  .modal{
+    background:var(--paper); color:var(--ink);
+    width:100%; max-width:560px; max-height:86vh; overflow-y:auto;
+    border-radius:6px 16px 16px 6px;
+    padding:28px 30px 26px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5), inset 4px 0 0 var(--rose-soft);
+  }
+  .modal h2{font-family:'Shippori Mincho', serif; margin:0 0 18px; font-size:20px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:11.5px; color:var(--ink-soft); margin-bottom:5px; letter-spacing:.03em;}
+  .field input[type=text], .field textarea{
+    width:100%; font-family:'Zen Kaku Gothic New', sans-serif;
+    border:1px solid var(--paper-shadow); background:#fffdf8;
+    border-radius:7px; padding:9px 11px; font-size:13.5px; color:var(--ink);
+    outline:none; resize:vertical;
+  }
+  .field input[type=text]:focus, .field textarea:focus{border-color:var(--rose-soft);}
+  .field textarea{min-height:160px; line-height:1.8;}
+  .tag-input-row{display:flex; flex-wrap:wrap; gap:6px; align-items:center; border:1px solid var(--paper-shadow); background:#fffdf8; border-radius:7px; padding:7px 9px;}
+  .tag-input-row input{border:none; outline:none; background:none; flex:1; min-width:80px; font-size:13px; font-family:'Zen Kaku Gothic New', sans-serif;}
+  .tag-chip{display:flex; align-items:center; gap:5px; background:rgba(182,69,92,0.12); color:var(--rose); border-radius:999px; padding:3px 8px 3px 10px; font-size:11.5px;}
+  .tag-chip button{border:none; background:none; color:var(--rose); cursor:pointer; font-size:13px; line-height:1; padding:0;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:20px;}
+  .btn{
+    font-family:'Zen Kaku Gothic New', sans-serif; border:none; border-radius:999px;
+    padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .btn-primary{background:var(--rose); color:#fff6f2;}
+  .btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--paper-shadow);}
+  .btn-danger{background:transparent; color:var(--rose); border:1px solid rgba(182,69,92,0.4);}
+
+  .view-modal .full-text{white-space:pre-wrap; line-height:2; font-size:14px; color:var(--ink); margin:14px 0 18px;}
+  .view-modal .top-row{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .work-tag{font-size:11.5px; color:var(--gold); font-weight:700; margin-bottom:4px; display:block;}
+
+  .loading{padding:60px; text-align:center; color:var(--lavender); font-size:13px;}
+
+  @media (max-width: 640px){
+    .layout{flex-direction:column;}
+    .sidebar{width:100%; position:static; padding:14px 16px 4px;}
+    .spine-row{display:flex; flex-wrap:wrap; gap:6px;}
+    .spine{width:auto; border-radius:999px; border-left:none; border:1px solid var(--line);}
+    .spine.active{border-color:var(--gold);}
+    .main{padding:16px;}
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="loading">読み込み中…</div></div>
+<script>
+(function(){
+  const PALETTE = ['#b6455c','#c9a15a','#7a8bb0','#9a7fb5','#6fa08a','#c17a4a'];
+  let entries = [];
+  let activeTag = null;
+  let searchQuery = '';
+  let editingId = null;
+  let loaded = false;
+
+  function tagColor(tag){
+    let h = 0;
+    for(let i=0;i<tag.length;i++) h = tag.charCodeAt(i) + ((h<<5)-h);
+    return PALETTE[Math.abs(h) % PALETTE.length];
+  }
+
+  const STORAGE_KEY = 'bunbako-entries';
+
+  async function load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      entries = raw ? JSON.parse(raw) : [];
+    }catch(e){
+      entries = [];
+    }
+    loaded = true;
+    render();
+  }
+
+  async function persist(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }catch(e){
+      console.error('save failed', e);
+      alert('保存に失敗しました。ブラウザの設定でローカルストレージがブロックされていないか確認してください。');
+    }
+  }
+
+  function allTags(){
+    const map = {};
+    entries.forEach(en => (en.tags||[]).forEach(t => { map[t] = (map[t]||0)+1; }));
+    return Object.entries(map).sort((a,b)=> b[1]-a[1]);
+  }
+
+  function filteredEntries(){
+    return entries
+      .filter(en => !activeTag || (en.tags||[]).includes(activeTag))
+      .filter(en => {
+        if(!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        return (en.title||'').toLowerCase().includes(q) || (en.text||'').toLowerCase().includes(q) || (en.work||'').toLowerCase().includes(q);
+      })
+      .sort((a,b)=> b.createdAt - a.createdAt);
+  }
+
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function fmtDate(ts){
+    const d = new Date(ts);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function render(){
+    const root = document.getElementById('root');
+    if(!loaded){ root.innerHTML = '<div class="loading">読み込み中…</div>'; return; }
+
+    const tags = allTags();
+    const list = filteredEntries();
+
+    let sidebarHtml = `<div class="sidebar"><p class="sidebar-label">タグで絞り込み</p><div class="spine-row">`;
+    sidebarHtml += `<button class="spine ${activeTag===null?'active':''}" data-tag="">
+        <span class="dot" style="background:var(--gold)"></span>すべて<span class="count">${entries.length}</span>
+      </button>`;
+    tags.forEach(([t,count]) => {
+      sidebarHtml += `<button class="spine ${activeTag===t?'active':''}" data-tag="${escapeHtml(t)}">
+          <span class="dot" style="background:${tagColor(t)}"></span>${escapeHtml(t)}<span class="count">${count}</span>
+        </button>`;
+    });
+    sidebarHtml += `</div></div>`;
+
+    let gridHtml;
+    if(list.length === 0){
+      gridHtml = `<div class="empty"><span class="mark">✦</span>${entries.length===0 ? 'まだ何もしまわれていません。<br>お気に入りの一節を、そっとしまってみましょう。' : '見つかりませんでした。'}</div>`;
+    } else {
+      gridHtml = `<div class="grid">` + list.map(en => `
+        <div class="card" data-id="${en.id}">
+          <span class="date">${fmtDate(en.createdAt)}</span>
+          <h3>${escapeHtml(en.title || '無題')}</h3>
+          <div class="excerpt">${escapeHtml(en.text)}</div>
+          <div class="meta">${(en.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+        </div>
+      `).join('') + `</div>`;
+    }
+
+    root.innerHTML = `
+      <div class="header">
+        <div class="title-row">
+          <div class="title-block">
+            <h1>文箱</h1>
+            <p>お気に入りの一節を、そっとしまっておく場所</p>
+          </div>
+          <button class="add-btn" id="openAdd">＋ 新しくしまう</button>
+        </div>
+        <div class="search-row">
+          <input class="search-input" id="searchInput" type="text" placeholder="タイトル・本文・作品名で検索…" value="${escapeHtml(searchQuery)}">
+        </div>
+      </div>
+      <div class="layout">
+        ${sidebarHtml}
+        <div class="main">${gridHtml}</div>
+      </div>
+    `;
+
+    document.getElementById('openAdd').onclick = () => openEditModal(null);
+    document.getElementById('searchInput').oninput = (e) => { searchQuery = e.target.value; render(); };
+    root.querySelectorAll('.spine').forEach(btn => {
+      btn.onclick = () => { const t = btn.dataset.tag; activeTag = t === '' ? null : t; render(); };
+    });
+    root.querySelectorAll('.card').forEach(card => {
+      card.onclick = () => openViewModal(card.dataset.id);
+    });
+  }
+
+  function openViewModal(id){
+    const en = entries.find(e => e.id === id);
+    if(!en) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.innerHTML = `
+      <div class="modal view-modal">
+        <div class="top-row">
+          <div>
+            ${en.work ? `<span class="work-tag">${escapeHtml(en.work)}</span>` : ''}
+            <h2>${escapeHtml(en.title || '無題')}</h2>
+          </div>
+        </div>
+        <div class="meta">${(en.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="full-text">${escapeHtml(en.text)}</div>
+        <div class="modal-actions">
+          <button class="btn btn-danger" id="delBtn">削除</button>
+          <button class="btn btn-ghost" id="editBtn">編集</button>
+          <button class="btn btn-primary" id="closeBtn">閉じる</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+    overlay.querySelector('#closeBtn').onclick = () => overlay.remove();
+    overlay.querySelector('#editBtn').onclick = () => { overlay.remove(); openEditModal(en.id); };
+    overlay.querySelector('#delBtn').onclick = async () => {
+      if(!confirm('この文章を削除しますか？')) return;
+      entries = entries.filter(e => e.id !== en.id);
+      await persist();
+      overlay.remove();
+      render();
+    };
+  }
+
+  function openEditModal(id){
+    editingId = id;
+    const en = id ? entries.find(e => e.id === id) : { title:'', work:'', text:'', tags:[] };
+    let currentTags = [...(en.tags||[])];
+
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <h2>${id ? '編集する' : '新しくしまう'}</h2>
+        <div class="field">
+          <label>タイトル</label>
+          <input type="text" id="fTitle" value="${escapeHtml(en.title)}" placeholder="例：夜勤明けの一言">
+        </div>
+        <div class="field">
+          <label>作品・キャラ名（任意）</label>
+          <input type="text" id="fWork" value="${escapeHtml(en.work)}" placeholder="例：夜勤コンビニ君">
+        </div>
+        <div class="field">
+          <label>タグ（Enterで追加）</label>
+          <div class="tag-input-row" id="tagRow">
+            <input type="text" id="fTag" placeholder="タグを入力…">
+          </div>
+        </div>
+        <div class="field">
+          <label>本文</label>
+          <textarea id="fText" placeholder="お気に入りの文章を貼り付け…">${escapeHtml(en.text)}</textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="cancelBtn">キャンセル</button>
+          <button class="btn btn-primary" id="saveBtn">保存する</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    function renderTagChips(){
+      const row = overlay.querySelector('#tagRow');
+      const input = overlay.querySelector('#fTag');
+      row.querySelectorAll('.tag-chip').forEach(c => c.remove());
+      currentTags.forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerHTML = `${escapeHtml(t)} <button type="button">×</button>`;
+        chip.querySelector('button').onclick = () => { currentTags = currentTags.filter(x=>x!==t); renderTagChips(); };
+        row.insertBefore(chip, input);
+      });
+    }
+    renderTagChips();
+
+    overlay.querySelector('#fTag').onkeydown = (e) => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const v = e.target.value.trim();
+        if(v && !currentTags.includes(v)){ currentTags.push(v); renderTagChips(); }
+        e.target.value = '';
+      }
+    };
+
+    overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
+    overlay.querySelector('#cancelBtn').onclick = () => overlay.remove();
+    overlay.querySelector('#saveBtn').onclick = async () => {
+      const title = overlay.querySelector('#fTitle').value.trim();
+      const work = overlay.querySelector('#fWork').value.trim();
+      const text = overlay.querySelector('#fText').value.trim();
+      if(!text){ alert('本文を入力してください'); return; }
+      if(id){
+        const target = entries.find(e => e.id === id);
+        target.title = title; target.work = work; target.text = text; target.tags = currentTags;
+      } else {
+        entries.push({ id: 'e' + Date.now() + Math.random().toString(36).slice(2,7), title, work, text, tags: currentTags, createdAt: Date.now() });
+      }
+      await persist();
+      overlay.remove();
+      render();
+    };
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
